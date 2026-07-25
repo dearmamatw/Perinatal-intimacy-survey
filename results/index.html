@@ -62,13 +62,27 @@
 
   <div class="cta">
     <p>還沒走過這條走廊嗎？</p>
-    <a class="btn" href="index.html">🕯 我也要留下我的心聲</a>
+    <a class="btn" id="backBtn" href="../">🕯 我也要留下我的心聲</a>
   </div>
 
   <div class="brand" style="margin-top:34px">俐伶醫師 × 小牛醫師｜《媽媽，你睡了嗎？》🌙</div>
 </div>
 
 <script>
+/* 回問卷的連結：從目前網址推算問卷首頁的絕對位置
+   支援 .../results/、.../results/index.html、.../results.html 三種放法 */
+(function(){
+  const btn=document.getElementById('backBtn');
+  if(!btn) return;
+  let base=location.href.split('#')[0].split('?')[0];
+  base=base.replace(/\/results\/index\.html$/,'/')
+           .replace(/\/results\/$/,'/')
+           .replace(/\/results\.html$/,'/');
+  // 萬一算出來還是自己（放法不在預期內），退回上一層
+  if(base===location.href.split('#')[0].split('?')[0]) base='../';
+  btn.setAttribute('href',base);
+})();
+
 const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbwGzi_4BlphjcMYMmagMa-LzTOAy6rEMx1pW_zXOVYVzGYoO_xgistiI2FIe7E0SFQ1/exec';
 
 /* 甜甜圈圖（二選一題用）：主色金、次色淺金 */
@@ -126,7 +140,10 @@ fetch(SUBMIT_URL + '?stats=1')
       h += `<p class="footnote">＊本統計為節目《媽媽，你睡了嗎？》自行蒐集、非隨機抽樣，不代表全體。每題以有作答者為分母。</p>`;
       card.innerHTML=h;
     } else {
-      card.innerHTML = `<p class="waiting">等大家的心聲收集滿 ${res.minN} 份，<br>這裡就會亮起大家的分布圖。<br><br>現在每一份，都在把燈點得更亮。🕯</p>`;
+      card.innerHTML = `<p class="waiting">大家的分布圖，會在收集滿 ${res.minN} 份之後亮起。<br><br>
+      人數太少的時候，比例容易失真，<br>也可能讓少數人的答案被認出來。<br>
+      所以我們寧可多等一等，再把數字說出口。<br><br>
+      現在每一份心聲，都在把燈點得更亮。🕯</p>`;
     }
   })
   .catch(()=>{
