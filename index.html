@@ -725,7 +725,9 @@ function loadStats(targetId, withLit){
         });
         h += `<p style="margin-top:12px;font-size:12px;color:var(--faint)">＊本統計為節目自行蒐集、非隨機抽樣，不代表全體。</p></div>`;
       } else {
-        h += `<p style="margin-top:10px;font-size:13px;color:var(--faint)" class="center">大家的分布圖，會在收集滿 ${res.minN} 份之後亮起。<br>
+        const left=Math.max(0,res.minN-res.n);
+        h += `<p style="margin-top:10px;font-size:13px;color:var(--faint)" class="center">
+        <b style="color:var(--gold-d)">再 ${left} 份，大家的分布圖就會亮起來。</b><br>
         人數太少的時候，比例容易失真，也可能讓少數人的答案被認出來——<br>
         所以我們寧可多等一等，再把數字說出口。<br>
         <span style="color:var(--gold-d)">你這一份，已經讓燈更亮了一點。🕯</span></p>`;
@@ -904,7 +906,7 @@ function statsFallback(withLit){
   if(withLit){
     h += `<p style="font-size:13.5px">你知道嗎？2009 年 BabyHome 一份針對台灣孕媽咪的調查（1006 份有效樣本）發現，<b>七成（70.4%）的孕媽咪在孕期仍有性生活</b>；而其中<b>高達八成六，進行時都曾擔心影響懷孕或胎兒</b>。你走過的，很多人也正在走。</p>`;
   }
-  h += `<p class="center" style="margin-top:10px;font-size:12.5px;color:var(--faint)">目前人數統計暫時讀取不到，不影響你剛剛送出的內容。</p>`;
+  h += `<p class="center" style="margin-top:10px;font-size:12.5px;color:var(--faint)">🕯 大家的心聲正在陸續點亮，累積滿 30 份之後，這裡會展示統計分布。<br>你剛剛送出的內容已經收到了，請耐心等我們一下。</p>`;
   return h;
 }
 function sendFail(){
