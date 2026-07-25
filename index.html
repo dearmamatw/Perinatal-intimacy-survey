@@ -158,7 +158,7 @@ const STAGES = [
       {id:'nationality', type:'single', num:'題 3', text:'你目前主要生活在：',
        opts:['台灣','台灣以外（請於下方註明國家／地區）'], other:true, otherLabel:'國家／地區', skippable:true},
       {id:'status', type:'single', num:'題 4', text:'目前狀態：',
-       opts:['懷孕中','待產中','產後','兩者皆非'], other:false, extra:'status', skippable:true},
+       opts:['懷孕中','待產中','產後一年內','以上皆非'], other:false, extra:'status', skippable:true},
       {id:'which_time', type:'single', num:'題 5', text:'你有幾次生育／懷孕經驗？',
        hint:'若不只一次，接下來的問題請鎖定「其中一次」來回答，這樣你的答案才不會被不同次的經驗混在一起',
        opts:['只有這一次','有多次，我選「最近一次」來回答','有多次，我選「印象最深的一次」來回答'], skippable:true},
@@ -359,7 +359,7 @@ function renderQ(q){
     }
     if(q.extra==='status' && v){
       if(v.choice==='懷孕中'||v.choice==='待產中') h+=`<div class="sub">目前約 <input type="number" oninput="setSub('${q.id}','week',this.value)" value="${state.data[q.id]?.week||''}"> 週</div>`;
-      if(v.choice==='產後') h+=`<div class="sub">寶寶目前 <input type="text" oninput="setSub('${q.id}','baby',this.value)" value="${state.data[q.id]?.baby||''}"> （月／歲）</div>`;
+      if(v.choice==='產後一年內') h+=`<div class="sub">寶寶目前 <input type="text" oninput="setSub('${q.id}','baby',this.value)" value="${state.data[q.id]?.baby||''}"> （月／歲）</div>`;
     }
   }
   else if(q.type==='multi'){
@@ -599,13 +599,13 @@ function buildReport(){
   /* 可分享區：不含任何性生活細節。以 * 標記要加粗的字 */
   const SL=[];
   if(stat==='懷孕中'||stat==='待產中') SL.push('此刻的你，正走在孕育一個生命的路上。');
-  else if(stat==='產後') SL.push('你已經走過懷孕與生產，正在成為媽媽的路上繼續走著。');
+  else if(stat==='產後一年內') SL.push('你已經走過懷孕與生產，正在成為媽媽的路上繼續走著。');
   else SL.push('謝謝你回頭看了這段路。');
 
   const langs=[...new Set([...gm('pg_nonsex'),...gm('pp_nonsex')])]
     .map(x=>x.split('（')[0]).filter(x=>x&&x.indexOf('獨處')<0);
   const hasSpace=[...gm('pg_nonsex'),...gm('pp_nonsex')].some(x=>x.indexOf('獨處')>=0);
-  if(langs.length) SL.push(`一路上，你們用*${langs.slice(0,3).map(x=>`「${x}」`).join('、')}*彼此靠近。`);
+  if(langs.length) SL.push(`一路上，你們用*${langs.slice(0,2).map(x=>`「${x}」`).join('、')}*彼此靠近。`);
   if(hasSpace) SL.push('你也懂得，給彼此獨處的空間，是另一種體貼。');
   if(!isNA(inti)) SL.push(`此刻的你：*「${inti}」*。`);
   if(!isNA(feel)) SL.push(feel==='現在這樣，我覺得剛剛好'?'你說，*現在這樣，剛剛好*。':`你說，*「${feel}」*。`);
@@ -721,7 +721,7 @@ function loadStats(targetId, withLit){
       } else {
         h += `<p style="margin-top:10px;font-size:13px;color:var(--faint)" class="center">等大家的心聲收集到 ${res.minN} 份，這裡就會出現大家的分布圖。<br>之後隨時可以回來看，不用重填。</p>`;
       }
-      h += `<p class="center" style="margin-top:14px;font-size:13px">📊 之後想回來看大家的分布 → 收藏 <a class="link" href="results.html">這個結果頁</a></p>`;
+      h += `<p class="center" style="margin-top:14px;font-size:13px">📊 之後想回來看大家的分布 → 收藏 <a class="link" href="results/">這個結果頁</a></p>`;
       box.innerHTML = h;
       fillCompare(res);
     })
@@ -746,6 +746,20 @@ function drawShareCard(out){
   g.addColorStop(0,'#FEFCF5'); g.addColorStop(.55,'#FBF6EC'); g.addColorStop(1,'#F3EAD6');
   x.fillStyle=g; x.fillRect(0,0,W,H);
 
+  // 金色細邊框（在限動白底上更立體）
+  const pad=44, r=30;
+  x.beginPath();
+  x.moveTo(pad+r,pad);
+  x.lineTo(W-pad-r,pad);      x.quadraticCurveTo(W-pad,pad,W-pad,pad+r);
+  x.lineTo(W-pad,H-pad-r);    x.quadraticCurveTo(W-pad,H-pad,W-pad-r,H-pad);
+  x.lineTo(pad+r,H-pad);      x.quadraticCurveTo(pad,H-pad,pad,H-pad-r);
+  x.lineTo(pad,pad+r);        x.quadraticCurveTo(pad,pad,pad+r,pad);
+  x.closePath();
+  x.strokeStyle='#C8912E'; x.globalAlpha=.45; x.lineWidth=3; x.stroke();
+  x.globalAlpha=.18; x.lineWidth=1; x.strokeStyle='#9E6E1C';
+  x.setLineDash([]); x.stroke();
+  x.globalAlpha=1;
+
   const SERIF='"Noto Serif TC",serif', SANS='"Noto Sans TC",sans-serif';
   x.textAlign='center';
 
@@ -761,22 +775,42 @@ function drawShareCard(out){
   x.fillStyle='#C8912E'; x.globalAlpha=.6;
   x.fillRect(W/2-38,300,76,4); x.globalAlpha=1;
 
-  // 內文（自動換行 + 垂直居中）
-  const lines=[];
-  SHARE_LINES.forEach(t=>{
-    wrap(x,t.replace(/\*/g,''),820,'42px '+SANS).forEach(s=>lines.push(s));
-    lines.push('');                       // 段落間空一行
-  });
-  if(lines.length&&lines[lines.length-1]==='') lines.pop();
-  const lh=72, block=lines.length*lh;
-  let y=Math.max(400,(H-block)/2-30);
-  x.font='42px '+SANS;
-  lines.forEach(s=>{ x.fillStyle='#6B6252'; x.fillText(s,W/2,y); y+=lh; });
+  // 內文：限定在 Y0～Y1 之間，優先讓每一句都不跳行
+  const Y0=350, Y1=H-210, AVAIL=Y1-Y0, MAXW=W-190;
+  let fs=0, lines=[], lh=0, block=0;
+
+  // 第一輪：找一個字級，讓每一句都能單行容納（42 → 30）
+  for(let t=42;t>=30;t-=1){
+    x.font=t+'px '+SANS;
+    const fitAll=SHARE_LINES.every(s=>x.measureText(s.replace(/\*/g,'')).width<=MAXW);
+    if(!fitAll) continue;
+    const L=Math.round(t*1.72), n=SHARE_LINES.length*2-1;
+    if(n*L<=AVAIL){ fs=t; lh=L;
+      lines=[]; SHARE_LINES.forEach((s,i)=>{ if(i) lines.push(''); lines.push(s.replace(/\*/g,'')); });
+      block=lines.length*lh; break; }
+  }
+
+  // 第二輪：真的塞不下才斷行（斷點落在標點）
+  if(!fs){
+    for(fs=40;;fs-=2){
+      lh=Math.round(fs*1.72); lines=[];
+      SHARE_LINES.forEach((t,i)=>{ if(i) lines.push('');
+        wrap(x,t.replace(/\*/g,''),MAXW,fs+'px '+SANS).forEach(s=>lines.push(s)); });
+      block=lines.length*lh;
+      if(block<=AVAIL || fs<=26) break;
+    }
+    while(block>AVAIL && lines.length>3){
+      lines.splice(lines.length-2,1); block=lines.length*lh;
+    }
+  }
+
+  x.font=fs+'px '+SANS; x.fillStyle='#6B6252'; x.textAlign='center';
+  let y=Y0+Math.max(0,(AVAIL-block)/2)+lh*0.75;
+  lines.forEach(s=>{ if(s) x.fillText(s,W/2,y); y+=lh; });
 
   // 頁尾
-  x.fillStyle='#9E6E1C'; x.font='40px '+SANS; x.fillText('🌙',W/2,H-190);
   x.fillStyle='#A99C86'; x.font='28px '+SANS;
-  x.fillText('《媽媽，你睡了嗎？》',W/2,H-130);
+  x.fillText('《媽媽，你睡了嗎？》🌙',W/2,H-132);
   x.fillText('俐伶醫師 × 小牛醫師',W/2,H-88);
 
   const url=cv.toDataURL('image/png');
@@ -797,15 +831,41 @@ function spaced(ctx,text,cx,y,gap){
     ctx.textAlign='left'; ctx.fillText(c,cur,y); cur+=cw+gap; });
   ctx.textAlign='center';
 }
-// 中文換行
+// 中文換行：優先在標點處斷、兩行盡量等長、避免孤字
 function wrap(ctx,text,maxW,font){
   ctx.font=font;
+  if(ctx.measureText(text).width<=maxW) return [text];
+
+  const PUNC='，、。；：？！';
+  const cands=[];
+  for(let i=0;i<text.length-1;i++) if(PUNC.indexOf(text[i])>=0) cands.push(i+1);
+
+  // 先試「在標點處切成兩行」，取最接近正中間的切點
+  let best=null; const mid=text.length/2;
+  for(const c of cands){
+    const a=text.slice(0,c), b=text.slice(c);
+    if(ctx.measureText(a).width<=maxW && ctx.measureText(b).width<=maxW){
+      const sc=Math.abs(c-mid);
+      if(!best||sc<best.sc) best={a,b,sc};
+    }
+  }
+  if(best) return [best.a,best.b];
+
+  // 退路：逐字排，再把孤字往上收
   const out=[]; let line='';
   for(const ch of text){
     if(ctx.measureText(line+ch).width>maxW && line){ out.push(line); line=ch; }
     else line+=ch;
   }
   if(line) out.push(line);
+  if(out.length>1){
+    const last=out[out.length-1], prev=out[out.length-2];
+    if([...last].length<=3 && [...prev].length>5){
+      const move=[...prev].slice(-2).join('');
+      out[out.length-2]=[...prev].slice(0,-2).join('');
+      out[out.length-1]=move+last;
+    }
+  }
   return out;
 }
 
