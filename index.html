@@ -232,7 +232,7 @@ const STAGES = [
       {id:'pp_resume', type:'single', num:'題 2', text:'那次產後大約多久恢復性生活？', hint:'俗稱「開機」',
        opts:['月子期間','產後 1–2 個月','產後 3–6 個月','產後 7–12 個月','一年以後才恢復','這題不適用'], skippable:true},
       {id:'pp_reason', type:'multi', num:'題 3', text:'那段時間影響性生活／親密關係的原因？', hint:'可複選；還沒恢復的人，也可以選那些讓你還沒準備好的原因',
-       opts:['這題不適用','傷口尚未復原（會陰、剖腹產傷口等）','睡眠不足、只想睡覺','育兒壓力大、分身乏術','哺乳影響（脹奶、溢奶等）','性交疼痛或乾澀','情緒低落、產後憂鬱','對身體外觀沒有自信','伴侶興致降低、或主動避免','只想有自己的空間、不想被碰觸','沒有特別原因','其他'], other:true, skippable:true},
+       opts:['傷口尚未復原（會陰、剖腹產傷口等）','性交疼痛或乾澀','身體變得很敏感，被碰觸會覺得太刺激','哺乳影響（脹奶、溢奶等）','睡眠不足、只想睡覺','育兒壓力大、分身乏術','心裡很累，沒有心力應付性愛','情緒低落、產後憂鬱','對身體外觀沒有自信','只想有自己的空間、不想被碰觸','伴侶興致降低、或主動避免','沒有特別原因','其他','這題不適用'], other:true, skippable:true},
       {id:'pp_sat_sex', type:'single', num:'題 4', text:'那段時間，性生活的滿意度？',
        opts:['非常滿意','滿意','普通','不滿意','非常不滿意','這題不適用（那段時間沒有性生活）'], skippable:true},
       {id:'pp_worry', type:'single', num:'題 5', text:'那段時間，你會不會擔心當下的親密關係？',
@@ -250,7 +250,7 @@ const STAGES = [
        opts:['很靠近，相處起來很放鬆','感情穩定，但少了一點心動的感覺','住在一起，但各忙各的、話變少了','一個人，但過得自在踏實','一個人，偶爾會覺得有點孤單','其他'], other:true, skippable:true},
       {id:'now_feel', type:'single', num:'題 3', text:'對於此刻的親密關係狀態，你的感受比較接近？',
        hint:'不管有沒有伴侶，都可以回答',
-       opts:['現在這樣，我覺得剛剛好','還在慢慢適應，需要一點時間','偶爾會想念以前，或某個人','正好享受一個人的自由','說不上來，複雜的心情'], skippable:true},
+       opts:['現在這樣，我覺得剛剛好','還在慢慢適應，需要一點時間','偶爾會想念以前，或某個人','正好享受一個人的自由','不滿意，心裡有點難過','說不上來，複雜的心情','其他，我想自己寫下感受'], other:true, otherLabel:'想寫下的感受', skippable:true},
     ]
   },
   { kind:'q', title:'整體回顧', n:'最後一盞燈', sub:'走到這裡了，謝謝你',
@@ -603,8 +603,8 @@ function sendSuccess(){
 
 /* ── 個人報告 ── */
 function gc(id){ const v=state.data[id]; return (v&&v.choice)||''; }               // 單選
-function gm(id){ const v=state.data[id]; return ((v&&v.choices)||[]).filter(x=>x.indexOf('這題不適用')<0&&x!=='其他'); } // 複選(去雜項)
-function isNA(s){ return !s || s.indexOf('這題不適用')>=0 || s==='其他'; }
+function gm(id){ const v=state.data[id]; return ((v&&v.choices)||[]).filter(x=>x.indexOf('這題不適用')<0&&x.indexOf('其他')<0); } // 複選(去雜項)
+function isNA(s){ return !s || s.indexOf('這題不適用')>=0 || s.indexOf('其他')>=0; }
 
 let SHARE_LINES=[];   // 可分享區的純文字（給圖卡用；永不含私密內容）
 
