@@ -3,943 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>媽媽，你睡了嗎？｜時光走廊</title>
+<title>大家的心聲｜親密關係時光走廊</title>
+<meta name="description" content="親密關係時光走廊問卷的即時統計。看看有多少人走過這條走廊、大家的心聲分布。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* 暖色系（與落地頁、PDF 一致） */
-    --cream:#FBF6EC;      /* 底色 奶油 */
-    --cream-2:#F5ECDA;    /* 卡片底 */
-    --soft:#EFE2C6;       /* 卡片邊、淺塊 */
-    --gold:#C8912E;       /* 主金 */
-    --gold-d:#9E6E1C;     /* 深金 */
-    --gold-soft:#E0B764;  /* 亮金 */
-    --sage:#B07A4A;       /* 陶土棕（輔色，取代原莧綠當 hover） */
-    --ink:#3A3222;        /* 標題深墨 */
-    --body:#6B6252;       /* 內文 */
-    --faint:#A99C86;      /* 次要字 */
-    --line:#E4D6BA;       /* 分隔線、邊框 */
-    --help:#FBEFD6;       /* 危機專線框底 */
-    /* 相容舊變數名，指向新色 */
-    --night:#FBF6EC;
-    --night-2:#F5ECDA;
-    --cream-dim:#8A8069;
-    --danger:#B07A4A;
+    --cream:#FBF6EC; --cream-2:#F5ECDA; --soft:#EFE2C6;
+    --gold:#C8912E; --gold-d:#9E6E1C; --gold-soft:#E0B764;
+    --ink:#3A3222; --body:#6B6252; --faint:#A99C86; --line:#E4D6BA; --help:#FBEFD6;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{-webkit-text-size-adjust:100%}
   body{
     font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-    background:
-      radial-gradient(ellipse 75% 50% at 50% 20%, #FEFCF5 0%, var(--cream) 58%, #F3EAD6 100%);
-    color:var(--body);
-    line-height:1.75;
-    min-height:100vh;
-    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    background:radial-gradient(ellipse 75% 50% at 50% 20%, #FEFCF5 0%, var(--cream) 58%, #F3EAD6 100%);
+    color:var(--body); line-height:1.75; min-height:100vh;
   }
-  .wrap{max-width:640px;margin:0 auto;padding:24px 20px 96px}
-
-  /* 進度：一盞一盞亮起的燈 */
-  .lamps{display:flex;gap:8px;justify-content:center;margin:8px 0 28px;flex-wrap:wrap}
-  .lamp{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-    border:1px solid var(--line);color:var(--faint);font-size:12px;transition:.5s;background:#fff}
-  .lamp.on{border-color:var(--gold);color:#fff;
-    background:radial-gradient(circle at 50% 40%, var(--gold-soft), var(--gold));
-    box-shadow:0 0 16px rgba(200,145,46,.4)}
-  .lamp.current{transform:scale(1.15)}
-
-  h1{font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;letter-spacing:.5px;
-    line-height:1.45;margin-bottom:6px;color:var(--ink)}
-  h2{font-family:"Noto Serif TC",serif;font-weight:600;font-size:21px;color:var(--gold-d);
-    margin:2px 0 4px;letter-spacing:.5px}
-  .eyebrow{color:var(--gold);font-size:13px;letter-spacing:3px;margin-bottom:10px;font-weight:600}
-  .lead{color:var(--body);font-size:15px}
-
-  .card{background:var(--cream-2);
-    border:1px solid var(--soft);border-radius:18px;padding:24px 20px;margin-top:18px;
+  .wrap{max-width:640px;margin:0 auto;padding:40px 20px 96px}
+  .eyebrow{color:var(--gold);font-size:13px;letter-spacing:3px;margin-bottom:10px;font-weight:600;text-align:center}
+  h1{font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;color:var(--ink);text-align:center;line-height:1.5}
+  .lead{color:var(--body);font-size:15px;text-align:center;margin-top:8px}
+  .rule{width:38px;height:2px;background:var(--gold);opacity:.55;border-radius:2px;margin:24px auto}
+  .card{background:var(--cream-2);border:1px solid var(--soft);border-radius:18px;padding:24px 20px;margin-top:18px;
     box-shadow:0 8px 24px rgba(160,122,74,.06)}
-
-  .q{margin:22px 0 6px}
-  .q-num{color:var(--gold);font-size:12px;letter-spacing:2px}
-  .q-text{font-size:16.5px;font-weight:600;margin-top:2px;color:var(--ink)}
-  .q-hint{color:var(--faint);font-size:13px;margin-top:4px}
-
-  .opts{display:flex;flex-direction:column;gap:9px;margin-top:12px}
-  .opt{display:flex;align-items:flex-start;gap:10px;padding:13px 14px;border:1px solid var(--line);
-    border-radius:12px;cursor:pointer;background:#fff;transition:.18s;font-size:15px;color:var(--ink)}
-  .opt:hover{border-color:var(--gold)}
-  .opt.sel{border-color:var(--gold);background:rgba(200,145,46,.10);box-shadow:0 0 0 1px var(--gold) inset}
-  .opt .dot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--faint);flex:0 0 auto;margin-top:2px}
-  .opt.sel .dot{border-color:var(--gold);background:var(--gold)}
-  .opt.multi .dot{border-radius:5px}
-
-  /* 量表 1-10 */
-  .scale{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:12px}
-  .scale button{aspect-ratio:1;border:1px solid var(--line);background:#fff;color:var(--body);
-    border-radius:9px;font-size:14px;cursor:pointer;transition:.15s}
-  .scale button:hover{border-color:var(--gold)}
-  .scale button.sel{background:var(--gold);border-color:var(--gold);color:#fff;font-weight:700}
-  .scale-ends{display:flex;justify-content:space-between;color:var(--faint);font-size:12px;margin-top:6px}
-
-  input[type=text],input[type=number],textarea{
-    width:100%;background:#fff;border:1px solid var(--line);color:var(--ink);
-    border-radius:10px;padding:11px 12px;font-size:15px;margin-top:10px;font-family:inherit}
-  textarea{min-height:84px;resize:vertical}
-  input:focus,textarea:focus{outline:none;border-color:var(--gold)}
-  .sub{display:flex;gap:8px;align-items:center;margin-top:8px;color:var(--body);font-size:14px}
-  .sub input{margin-top:0;width:90px}
-
-  .skip{display:inline-block;margin-top:10px;background:none;border:none;color:var(--faint);
-    font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit}
-  .skip:hover{color:var(--gold-d)}
-  .skipped{color:var(--gold-d);font-size:12.5px;margin-top:8px}
-
-  .nav{display:flex;gap:12px;margin-top:26px}
-  .btn{flex:1;padding:14px;border-radius:999px;border:none;font-size:16px;font-weight:700;
-    cursor:pointer;font-family:inherit;transition:.18s;letter-spacing:.03em}
-  .btn-primary{background:var(--gold);color:#fff;box-shadow:0 6px 18px rgba(200,145,46,.28)}
-  .btn-primary:hover{background:var(--gold-d);transform:translateY(-1px)}
-  .btn-ghost{background:transparent;color:var(--body);border:1px solid var(--line)}
-  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-d)}
-  .btn:disabled{opacity:.4;cursor:not-allowed}
-
-  .note{background:var(--help);border:1px solid var(--soft);
-    border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--body);margin-top:16px;line-height:1.9}
-  .note b{color:var(--gold-d)}
-
-  .stage-title{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
-  .stage-title .n{font-family:"Noto Serif TC",serif;color:var(--gold);font-size:15px}
-
-  .center{text-align:center}
-  .divider{width:38px;height:2px;background:var(--gold);opacity:.55;border-radius:2px;margin:24px auto}
-
-  .summary{white-space:pre-wrap;background:#fff;border:1px solid var(--line);
-    border-radius:12px;padding:16px;font-size:13px;color:var(--body);margin-top:14px;
-    max-height:280px;overflow:auto;font-family:ui-monospace,monospace;line-height:1.6}
-
+  .counter{background:var(--help);border:1px solid var(--soft);border-radius:999px;
+    padding:14px 24px;text-align:center;font-size:17px;color:var(--body);margin:20px auto;max-width:420px}
+  .counter b{color:var(--gold-d);font-size:22px}
+  .stat-label{font-weight:700;color:var(--ink);font-size:15px;margin-top:20px;font-family:"Noto Serif TC",serif}
+  .bar-row{margin-top:8px}
+  .bar-head{display:flex;justify-content:space-between;font-size:13px;color:var(--body)}
+  .bar-track{height:10px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:3px}
+  .bar-fill{height:100%;background:var(--gold);border-radius:6px;transition:width .8s ease}
+  .footnote{font-size:12px;color:var(--faint);margin-top:16px}
+  .waiting{text-align:center;color:var(--faint);font-size:14px;padding:20px 0}
+  .cta{text-align:center;margin-top:28px;font-size:14px}
   a.link{color:var(--gold-d);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--soft);padding-bottom:1px}
   a.link:hover{border-bottom-color:var(--gold)}
-  .fade{animation:fade .45s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){.fade{animation:none}}
+  .btn{display:inline-block;background:var(--gold);color:#fff;font-weight:700;border:none;border-radius:999px;
+    padding:13px 32px;font-size:15px;text-decoration:none;box-shadow:0 6px 18px rgba(200,145,46,.28);margin-top:10px}
+  .btn:hover{background:var(--gold-d)}
+  .moon{text-align:center;color:var(--gold-d);font-size:26px;margin-top:34px}
+  .brand{text-align:center;color:var(--faint);font-size:13px;margin-top:8px}
 </style>
 </head>
 <body>
-<div class="wrap" id="app"></div>
+<div class="wrap">
+  <div class="eyebrow">親　密　關　係　時　光　走　廊</div>
+  <h1>大家的心聲</h1>
+  <p class="lead">走過這條走廊的每一個人，都留下了一點光。</p>
+  <div class="rule"></div>
+
+  <div class="counter" id="counter">正在點亮燈…</div>
+
+  <div class="card" id="statsCard">
+    <p class="waiting">正在整理大家的心聲…</p>
+  </div>
+
+  <div class="cta">
+    <p>還沒走過這條走廊嗎？</p>
+    <a class="btn" id="backBtn" href="../">🕯 我也要留下我的心聲</a>
+  </div>
+
+  <div class="brand" style="margin-top:34px">俐伶醫師 × 小牛醫師｜《媽媽，你睡了嗎？》🌙</div>
+</div>
 
 <script>
-/* ============================================================
-   媽媽，你睡了嗎？｜孕期親密關係 時光走廊問卷
-   純前端、匿名、可跳過、不自動上傳。完成後由填答者主動複製送出。
-   ============================================================ */
+/* 回問卷的連結：從目前網址推算問卷首頁的絕對位置
+   支援 .../results/、.../results/index.html、.../results.html 三種放法 */
+(function(){
+  const btn=document.getElementById('backBtn');
+  if(!btn) return;
+  let base=location.href.split('#')[0].split('?')[0];
+  base=base.replace(/\/results\/index\.html$/,'/')
+           .replace(/\/results\/$/,'/')
+           .replace(/\/results\.html$/,'/');
+  // 萬一算出來還是自己（放法不在預期內），退回上一層
+  if(base===location.href.split('#')[0].split('?')[0]) base='../';
+  btn.setAttribute('href',base);
+})();
 
-const state = { data:{}, stageIdx:0 };
-
-/* 五等第共用選項 */
-const LIKERT5 = ['非常滿意','滿意','普通','不滿意','非常不滿意'];
-
-/* 頻率選項 */
-const FREQ_OPTS = ['每週大於三次','大約每週一次','大約兩週一次','大約每個月一次','偶爾、不固定'];
-
-/* ---- 全部關卡 ---- */
-const STAGES = [
-  { // 0 入口 / 知情同意 / 守門
-    kind:'intro'
-  },
-  { // 1 基本資料
-    kind:'q', title:'走進走廊之前', n:'第一盞燈', sub:'先讓我們認識你一點點',
-    qs:[
-      {id:'age', type:'number', num:'題 1', text:'你的年齡', hint:'請填數字（歲）。未滿 18 歲無法繼續，感謝你的理解。', required:true},
-      {id:'gender', type:'single', num:'題 2', text:'你的性別是：',
-       hint:'由你自己認定，選你最自在的那一個',
-       opts:['女性','男性','非二元','跨性別','不方便說'], skippable:true},
-      {id:'nationality', type:'single', num:'題 3', text:'你目前主要生活在：',
-       opts:['台灣','台灣以外（請於下方註明國家／地區）'], other:true, otherLabel:'國家／地區', skippable:true},
-      {id:'status', type:'single', num:'題 4', text:'目前狀態：',
-       opts:['懷孕中','待產中','產後一年內','以上皆非'], other:false, extra:'status', skippable:true},
-      {id:'which_time', type:'single', num:'題 5', text:'你有幾次生育／懷孕經驗？',
-       hint:'若不只一次，接下來的問題請鎖定「其中一次」來回答，這樣你的答案才不會被不同次的經驗混在一起',
-       opts:['只有這一次','有多次，我選「最近一次」來回答','有多次，我選「印象最深的一次」來回答'], skippable:true},
-      {id:'parity', type:'text', num:'題 6', text:'你選來回答的這一次，是第幾胎？', hint:'可填數字，或「不便回答」', skippable:true},
-      {id:'planned', type:'single', num:'題 7', text:'這一次是計畫中的懷孕嗎？',
-       opts:['是','否'], skippable:true},
-      {id:'rel_state', type:'single', num:'題 8', text:'目前與伴侶的關係狀態：',
-       opts:['已婚','同居未婚','交往中未同居','目前單身／沒有伴侶','離婚或分居中','其他'], other:true, skippable:true},
-      {id:'rel_len', type:'text', num:'題 9', text:'若有伴侶，與現任在一起多久？', hint:'例如「3 年 5 個月」；若目前沒有伴侶，可跳過', skippable:true},
-    ]
-  },
-  { kind:'q', title:'懷孕前', n:'第二盞燈',
-    sub:'還沒有寶寶的那段日子。這份問卷裡說的「性生活」，指的是任何你認為屬於性的親密接觸，不限性別、不限形式，由你自己認定',
-    qs:[
-      {id:'pre_had', type:'single', num:'題 1', text:'懷孕前，你有性生活嗎？',
-       opts:['有','沒有'], skippable:true},
-      {id:'pre_freq', type:'single', num:'題 2', text:'那段期間，性生活的頻率大約是？', hint:'若上一題選「沒有」，可跳過',
-       opts:FREQ_OPTS, other:true, skippable:true},
-      {id:'pre_sat_sex', type:'single', num:'題 3', text:'那段期間，性生活的滿意度？', hint:'若沒有性生活可跳過',
-       opts:['非常滿意','滿意','普通','不滿意','非常不滿意'], skippable:true},
-      {id:'pre_sat_rel', type:'single', num:'題 4', text:'那段期間，和伴侶的關係滿意度？',
-       opts:['非常滿意','滿意','普通','不滿意','非常不滿意','這題不適用（當時沒有伴侶）'], skippable:true},
-    ]
-  },
-  { kind:'q', title:'孕期', n:'第三盞燈', sub:'從懷孕到生產前的這段路。這一關會先問你孕期有沒有性生活，再往下走',
-    qs:[
-      {id:'pg_had', type:'single', num:'題 1', text:'請問你在孕期是否有性生活？',
-       hint:'若選「沒有」，下面關於性行為的題目都可以跳過，直接到最後一題',
-       opts:['有','沒有'], skippable:true},
-      {id:'pg_stage', type:'multi', num:'題 2', text:'你在孕期哪一個階段有性生活？', hint:'可複選',
-       opts:['第一孕期（未滿 14 週）','第二孕期（14–28 週）','第三孕期（超過 28 週）'], skippable:true},
-      {id:'pg_freq', type:'single', num:'題 3', text:'在有性生活的那段期間，頻率大約是？',
-       opts:FREQ_OPTS, other:true, skippable:true},
-      {id:'pg_sat_sex', type:'single', num:'題 4', text:'孕期進行性行為的滿意度？',
-       opts:['非常滿意','滿意','普通','不滿意','非常不滿意'], skippable:true},
-      {id:'pg_worry', type:'single', num:'題 5', text:'進行性行為的當下或事後，你會不會擔心影響懷孕或胎兒？',
-       opts:['非常擔心','有點擔心','偶爾會','幾乎不會（想過但不擔心）','其實沒有想太多'], skippable:true},
-      {id:'pg_reason', type:'multi', num:'題 6', text:'孕期影響性生活的原因？', hint:'可複選',
-       opts:['身體不適（孕吐、脹氣等）','感覺疲倦、沒有體力','提不起興致、沒有慾望','擔心傷害胎兒','醫囑限制（安胎、前置胎盤等）','身體外觀改變、沒有自信','情緒低落或焦慮','伴侶興致降低、或主動避免','性交疼痛或不適（乾澀、姿勢困難等）','沒有特別原因','其他'], other:true, skippable:true},
-      {id:'pg_relplus', type:'single', num:'題 7', text:'你覺得孕期有性生活，對你們的伴侶關係影響是？',
-       opts:['感情加溫，更加親密','沒有影響，一如往常','壓力山大、有些負擔','說不上來，好像有又好像沒有','這題不適用'], skippable:true},
-      {id:'pg_nonsex', type:'multi', num:'題 8', text:'孕期中除了性行為以外，你們用什麼方式維繫親密關係？', hint:'可複選；這五種取自「愛的五種語言」',
-       opts:['肯定的言語（稱讚、感謝、我愛你）','精心的時刻（專心相處、好好說話）','服務的行動（幫忙分擔、照顧起居）','身體的接觸（擁抱、牽手、依偎）','贈送的禮物（用心準備的小驚喜）','其他','這題不適用'], other:true, skippable:true},
-
-      {id:'pg_tip_intro', type:'note',
-       text:'以下兩題是想集合「走過的人」的真實經驗，給後來也想嘗試的夫妻一點方向。這些是媽媽們的分享，不是醫療建議。每個人孕況不同，實際要不要嘗試，還是要跟自己的醫師確認喔。'},
-      {id:'pg_position', type:'multi', num:'題 9', text:'孕期嘗試性行為時，哪些體位讓你覺得比較舒服、比較安心？', hint:'可複選；沒試過但好奇也有選項',
-       opts:['男上體位（傳教士，男生在上、女方平躺）','女上體位（騎乘式，自己控制節奏與深度）','側入體位（湯匙式，兩人側躺）','後入體位（後背式，趴跪、不壓迫腹部）','坐姿體位（蓮花式，面對面坐、互相環抱）','半躺體位（床沿式，女生躺床沿、臀部靠邊，男生站或跪）','只要不壓到肚子，哪種都可以','其實怎樣都不太舒服','我沒試過，但很好奇','我沒試過，也還不敢試','其他'], other:true, skippable:true},
-      {id:'pg_foreplay', type:'single', num:'題 10', text:'孕期時，你們需要比孕前更多的前戲或鋪陳嗎？', hint:'前戲指進入性行為前的親吻、撫摸、營造氣氛等',
-       opts:['比以前更需要醞釀','跟孕前差不多','其實比以前更快有感覺','我沒試過，但很好奇','這題不適用'], skippable:true},
-      {id:'pg_share', type:'textarea', num:'題 11', text:'關於孕期的性與親密，有沒有什麼「我後來才發現、早知道就好」的經驗想分享給其他夫妻？',
-       hint:'例如哪個姿勢比較舒服、怎麼跟另一半開口、怎麼放鬆心情不緊張——任何一句真心話，都可能幫到正在猶豫的人。可跳過。', skippable:true},
-    ]
-  },
-  { kind:'q', title:'那次產後的第一年', n:'第四盞燈', sub:'你選來回答的那一次，生完之後的那一年，那段沒人細說的日子',
-    qs:[
-      {id:'pp_had', type:'single', num:'題 1', text:'那次產後的第一年裡，你有恢復性生活嗎？',
-       hint:'後面三種情況都沒關係，接下來的題目都有「這題不適用」可以選，或直接跳過',
-       opts:['有恢復','還沒有恢復','那段時間，伴侶不在身邊（外派、工作或其他原因）','那段時間，我身邊沒有伴侶'], skippable:true},
-      {id:'pp_resume', type:'single', num:'題 2', text:'那次產後大約多久恢復性生活？', hint:'俗稱「開機」',
-       opts:['月子期間','產後 1–2 個月','產後 3–6 個月','產後 7–12 個月','一年以後才恢復','這題不適用'], skippable:true},
-      {id:'pp_reason', type:'multi', num:'題 3', text:'那段時間影響性生活／親密關係的原因？', hint:'可複選；還沒恢復的人，也可以選那些讓你還沒準備好的原因',
-       opts:['這題不適用','傷口尚未復原（會陰、剖腹產傷口等）','睡眠不足、只想睡覺','育兒壓力大、分身乏術','哺乳影響（脹奶、溢奶等）','性交疼痛或乾澀','情緒低落、產後憂鬱','對身體外觀沒有自信','伴侶興致降低、或主動避免','只想有自己的空間、不想被碰觸','沒有特別原因','其他'], other:true, skippable:true},
-      {id:'pp_sat_sex', type:'single', num:'題 4', text:'那段時間，性生活的滿意度？',
-       opts:['非常滿意','滿意','普通','不滿意','非常不滿意','這題不適用（那段時間沒有性生活）'], skippable:true},
-      {id:'pp_worry', type:'single', num:'題 5', text:'那段時間，你會不會擔心當下的親密關係？',
-       opts:['非常擔心','有點擔心','偶爾會','幾乎不擔心','這題不適用'], skippable:true},
-      {id:'pp_nonsex', type:'multi', num:'題 6', text:'那段時間除了性行為，你們用什麼方式維持親密關係？', hint:'可複選',
-       opts:['肯定的言語（稱讚、感謝、我愛你）','精心的時刻（專心相處、好好說話）','服務的行動（幫忙分擔、照顧起居）','身體的接觸（擁抱、牽手、依偎）','贈送的禮物（用心準備的小驚喜）','給彼此獨處的空間，也是一種體貼','其他','這題不適用'], other:true, skippable:true},
-      {id:'pp_biggest', type:'textarea', num:'題 7', text:'產後那一年，對你們親密關係影響最大的因素是？', hint:'是身體、情緒、壓力，還是你們之間的溝通？', skippable:true},
-    ]
-  },
-  { kind:'q', title:'此時此刻', n:'第五盞燈', sub:'前面聊的是過去，這一小段想問問你此刻的狀態',
-    qs:[
-      {id:'now_state', type:'single', num:'題 1', text:'此時此刻，你的性生活是？',
-       opts:['有伴侶，也有性生活','有伴侶，但目前沒有性生活','目前單身／沒有伴侶','其他'], other:true, skippable:true},
-      {id:'now_intimacy', type:'single', num:'題 2', text:'此刻，你的親密關係狀態是？',
-       opts:['很靠近，相處起來很放鬆','感情穩定，但少了一點心動的感覺','住在一起，但各忙各的、話變少了','一個人，但過得自在踏實','一個人，偶爾會覺得有點孤單','其他'], other:true, skippable:true},
-      {id:'now_feel', type:'single', num:'題 3', text:'對於此刻的親密關係狀態，你的感受比較接近？',
-       hint:'不管有沒有伴侶，都可以回答',
-       opts:['現在這樣，我覺得剛剛好','還在慢慢適應，需要一點時間','偶爾會想念以前，或某個人','正好享受一個人的自由','說不上來，複雜的心情'], skippable:true},
-    ]
-  },
-  { kind:'q', title:'整體回顧', n:'最後一盞燈', sub:'走到這裡了，謝謝你',
-    qs:[
-      {id:'rv_most', type:'textarea', num:'題 1', text:'你選來回答的那次孕產中，哪個階段的親密關係變化最大？為什麼？', hint:'可以想想是懷孕前、孕期、還是產後？是變得更靠近，還是更有距離？哪一段讓你印象最深？當時發生了什麼？', skippable:true},
-      {id:'rv_comm', type:'textarea', num:'題 2', text:'如果有伴侶，你們如何溝通性需求與親密關係的變化？', hint:'是直接說出口、用暗示的、還是幾乎沒談過？如果當時或現在沒有伴侶，也可以寫你一個人怎麼面對，或直接跳過。', skippable:true},
-      {id:'rv_advice', type:'textarea', num:'題 3', text:'有沒有想讓其他孕媽媽或伴侶知道的經驗或建議？', hint:'那句「早知道就好」的話、或你希望當時有人告訴你的事。', skippable:true},
-      {id:'rv_extra', type:'textarea', num:'題 4', text:'其他想補充的內容：', hint:'任何還沒說完的、想留下的話，這裡都可以。', skippable:true},
-    ]
-  },
-  { kind:'done' }
-];
-
-const TOTAL_LAMPS = STAGES.filter(s=>s.kind==='q').length;
-
-/* ---------- 渲染 ---------- */
-const app = document.getElementById('app');
-
-function lampsBar(activeQIndex){
-  let lampStages = STAGES.map((s,i)=>({s,i})).filter(o=>o.s.kind==='q');
-  let html='<div class="lamps">';
-  lampStages.forEach((o,idx)=>{
-    const done = o.i < state.stageIdx;
-    const cur = o.i === state.stageIdx;
-    html+=`<div class="lamp ${done||cur?'on':''} ${cur?'current':''}">${idx+1}</div>`;
-  });
-  html+='</div>';
-  return html;
-}
-
-function render(){
-  const st = STAGES[state.stageIdx];
-  window.scrollTo(0,0);
-  if(st.kind==='intro') return renderIntro();
-  if(st.kind==='done')  return renderDone();
-  renderStage(st);
-}
-
-/* ---- 開場：知情同意 + 18 歲守門 ---- */
-function renderIntro(){
-  app.innerHTML=`
-  <div class="fade">
-    <div class="eyebrow">媽媽，你睡了嗎？</div>
-    <h1>親密關係時光走廊</h1>
-    <p class="lead">一段關於孕期與產後親密關係的回顧。</p>
-
-    <div class="card">
-      <h2>在開始之前</h2>
-      <p class="lead" style="margin-top:8px">
-        這份回顧會蒐集你在懷孕前後，關於親密關係與性生活的感受，作為節目《媽媽，你睡了嗎？》內容整理的參考。
-      </p>
-      <div class="note" style="margin-top:16px">
-        <b>你的權利，先說清楚：</b><br>
-        · 這份回顧<b>不記名</b>——我們不會問你的姓名、email 或任何能認出你是誰的資料。<br>
-        · 你按下最後的送出後，答案會存到節目的一份試算表；在那之前，你填的東西都只在你自己的手機裡。<br>
-        · 任何一題都可以<b>跳過</b>，也可以隨時關掉離開，送出前的內容不會被留下。<br>
-        · 資料僅作節目內容整理，若引用比例數字，會一併說明「為節目自行蒐集、非隨機抽樣、不代表全體」。<br>
-        · 這不是醫療診斷，也不是研究收案。只是想收集你們的心聲。<br>
-        · 整體統計只會在<b>累積滿 30 份之後</b>才公開，而且只呈現整體比例，不會出現任何一個人的答案。<br>
-        · 這份問卷裡說的「性生活」，指的是<b>任何你認為屬於性的親密接觸，不限性別、不限形式</b>，由你自己認定；異性、同性、跨性別的關係都在其中。<br>
-        · 內容涉及成人親密關係，<b>需年滿 18 歲</b>才能參與。
-      </div>
-      <div class="divider"></div>
-      <p class="q-text">我已閱讀上面的說明，且我已年滿 18 歲。</p>
-      <div class="nav">
-        <button class="btn btn-primary" onclick="consentYes()">我了解，開始回顧</button>
-      </div>
-      <button class="skip" onclick="consentNo()">我未滿 18 歲／我先不參與</button>
-    </div>
-  </div>`;
-}
-function consentYes(){ state.stageIdx=1; render(); }
-function consentNo(){
-  app.innerHTML=`<div class="fade center" style="padding-top:60px">
-    <div class="eyebrow">媽媽，你睡了嗎？</div>
-    <h1>謝謝你</h1>
-    <p class="lead" style="margin-top:14px">謝謝你願意點進來。<br>照顧好自己，也是很重要的一件事。<br>晚安。🌙</p>
-  </div>`;
-}
-
-/* ---- 關卡渲染 ---- */
-function renderStage(st){
-  let html=`<div class="fade">${lampsBar()}
-    <div class="stage-title"><span class="n">${st.n}</span></div>
-    <h2>${st.title}</h2>
-    <p class="lead">${st.sub}</p>
-    <div class="card">`;
-  st.qs.forEach(q=> html+=renderQ(q));
-  html+=`</div>
-    <div class="nav">
-      ${state.stageIdx>1?'<button class="btn btn-ghost" onclick="prev()">上一段</button>':''}
-      <button class="btn btn-primary" id="nextBtn" onclick="next()">${st.title==='整體回顧'?'完成回顧':'下一段'}</button>
-    </div>
-    <p class="q-hint center" style="margin-top:14px">每一題都可以跳過，走到哪裡都算數。</p>
-  </div>`;
-  app.innerHTML=html;
-  refreshNext();
-}
-
-function renderQ(q){
-  // note 型：純說明文字，不是題目、不可作答
-  if(q.type==='note'){
-    return `<div class="q" id="q_${q.id}"><div class="note" style="margin-top:4px">${q.text}</div></div>`;
-  }
-  const v = state.data[q.id];
-  let h=`<div class="q" id="q_${q.id}"><div class="q-num">${q.num||''}</div><div class="q-text">${q.text}</div>`;
-  if(q.hint) h+=`<div class="q-hint">${q.hint}</div>`;
-
-  if(q.type==='single'){
-    h+='<div class="opts">';
-    q.opts.forEach(o=>{
-      const sel = v && v.choice===o ? 'sel':'';
-      h+=`<div class="opt ${sel}" onclick="pickSingle('${q.id}','${o}',${!!q.other})"><span class="dot"></span><span>${o}</span></div>`;
-    });
-    h+='</div>';
-    if(q.other && v && /其他|以外/.test(v.choice||'')){
-      h+=`<input type="text" placeholder="${q.otherLabel||'請描述'}" value="${(v.other||'').replace(/"/g,'&quot;')}" oninput="setOther('${q.id}',this.value)">`;
-    }
-    if(q.extra==='status' && v){
-      if(v.choice==='懷孕中'||v.choice==='待產中') h+=`<div class="sub">目前約 <input type="number" oninput="setSub('${q.id}','week',this.value)" value="${state.data[q.id]?.week||''}"> 週</div>`;
-      if(v.choice==='產後一年內') h+=`<div class="sub">寶寶目前 <input type="text" oninput="setSub('${q.id}','baby',this.value)" value="${state.data[q.id]?.baby||''}"> （月／歲）</div>`;
-    }
-  }
-  else if(q.type==='multi'){
-    h+='<div class="opts">';
-    const arr = (v&&v.choices)||[];
-    q.opts.forEach(o=>{
-      const sel = arr.includes(o)?'sel':'';
-      h+=`<div class="opt multi ${sel}" onclick="pickMulti('${q.id}','${o}',${!!q.other})"><span class="dot"></span><span>${o}</span></div>`;
-    });
-    h+='</div>';
-    if(q.other && arr.includes('其他')){
-      h+=`<input type="text" placeholder="請描述" value="${(v.other||'').replace(/"/g,'&quot;')}" oninput="setOther('${q.id}',this.value)">`;
-    }
-  }
-  else if(q.type==='scale'){
-    h+='<div class="scale">';
-    for(let i=1;i<=10;i++){
-      const sel = v===i?'sel':'';
-      h+=`<button class="${sel}" onclick="setScale('${q.id}',${i})">${i}</button>`;
-    }
-    h+='</div><div class="scale-ends"><span>1 · 非常不滿意</span><span>非常滿意 · 10</span></div>';
-  }
-  else if(q.type==='text'){
-    h+=`<input type="text" value="${(v||'').toString().replace(/"/g,'&quot;')}" oninput="setText('${q.id}',this.value)" placeholder="請輸入">`;
-  }
-  else if(q.type==='number'){
-    h+=`<input type="number" value="${v!=null?v:''}" oninput="setText('${q.id}',this.value)" placeholder="數字">`;
-  }
-  else if(q.type==='textarea'){
-    h+=`<textarea oninput="setText('${q.id}',this.value)" placeholder="想寫多少都可以，也可以留白">${v||''}</textarea>`;
-  }
-
-  if(q.skippable){
-    const isSkip = state.data['__skip_'+q.id];
-    h+= isSkip
-      ? `<div class="skipped">這題已跳過 · <span class="skip" style="color:var(--gold-soft)" onclick="unskip('${q.id}')">改回填答</span></div>`
-      : `<button class="skip" onclick="skip('${q.id}')">這題我想跳過</button>`;
-  }
-  h+='</div>';
-  return h;
-}
-
-/* ---------- 作答存取（就地更新，不整頁重繪、不捲動） ---------- */
-function findQ(id){
-  const st=STAGES[state.stageIdx];
-  return st.qs ? st.qs.find(q=>q.id===id) : null;
-}
-function repaintQ(id){
-  const q=findQ(id); if(!q){ render(); return; }
-  const wrap=document.getElementById('q_'+id);
-  if(!wrap){ render(); return; }
-  const tmp=document.createElement('div');
-  tmp.innerHTML=renderQ(q);
-  wrap.replaceWith(tmp.firstElementChild);
-  refreshNext();
-}
-function pickSingle(id,val,hasOther){
-  state.data[id]={choice:val}; delete state.data['__skip_'+id]; repaintQ(id);
-}
-function pickMulti(id,val){
-  const cur = state.data[id]?.choices||[];
-  const i=cur.indexOf(val);
-  if(i>=0)cur.splice(i,1); else cur.push(val);
-  state.data[id]={...(state.data[id]||{}),choices:cur};
-  delete state.data['__skip_'+id]; repaintQ(id);
-}
-function setOther(id,v){ state.data[id]={...(state.data[id]||{}),other:v}; refreshNext(); }
-function setSub(id,k,v){ state.data[id]={...(state.data[id]||{}),[k]:v}; }
-function setScale(id,v){ state.data[id]=v; delete state.data['__skip_'+id]; repaintQ(id); }
-function setText(id,v){ state.data[id]=v; delete state.data['__skip_'+id]; refreshNext(); }
-function skip(id){ state.data['__skip_'+id]=true; delete state.data[id]; repaintQ(id); }
-function unskip(id){ delete state.data['__skip_'+id]; repaintQ(id); }
-
-/* ---------- 導覽 + 守門 ---------- */
-function refreshNext(){
-  const btn=document.getElementById('nextBtn'); if(!btn)return;
-  const st=STAGES[state.stageIdx];
-  // 年齡守門：第一段時，年齡必填且需 >=18
-  if(st.title==='走進走廊之前'){
-    const age=parseInt(state.data['age']);
-    btn.disabled = !(age>=18);
-    btn.textContent = isNaN(age)?'請先填年齡':(age<18?'需年滿 18 歲':'下一段');
-  } else { btn.disabled=false; }
-}
-function next(){
-  const st=STAGES[state.stageIdx];
-  if(st.title==='走進走廊之前'){
-    const age=parseInt(state.data['age']);
-    if(!(age>=18)){ return; }
-  }
-  state.stageIdx++; render();
-}
-function prev(){ state.stageIdx--; render(); }
-
-/* ---------- 完成頁 ---------- */
-function labelMap(){
-  return {
-    age:'年齡', gender:'性別', nationality:'生活地區', status:'目前狀態', which_time:'回答哪一次', parity:'第幾胎', planned:'計畫中懷孕',
-    rel_state:'關係狀態', rel_len:'在一起多久',
-    pre_had:'孕前-有無性生活', pre_freq:'孕前-頻率', pre_sat_sex:'孕前-性滿意', pre_sat_rel:'孕前-關係滿意',
-    pg_had:'孕期-有無性生活', pg_stage:'孕期-哪階段有', pg_freq:'孕期-頻率', pg_sat_sex:'孕期-性滿意', pg_worry:'孕期-擔心胎兒', pg_reason:'孕期-影響原因', pg_relplus:'孕期-對關係影響', pg_nonsex:'孕期-非性親密方式', pg_position:'孕期-舒服的方式', pg_foreplay:'孕期-前戲需求', pg_share:'孕期-經驗分享',
-    pp_had:'產後-有無恢復性生活', pp_resume:'產後-恢復時間', pp_reason:'產後-影響原因', pp_sat_sex:'產後-性滿意', pp_worry:'產後-擔心', pp_nonsex:'產後-非性親密方式', pp_biggest:'產後-最大因素',
-    now_state:'現在-性生活狀態', now_intimacy:'現在-親密關係狀態', now_feel:'現在-感受',
-    rv_most:'回顧-變化最大', rv_comm:'回顧-如何溝通', rv_advice:'回顧-給人的建議', rv_extra:'回顧-補充',
-  };
-}
-function buildSummary(){
-  const L=labelMap(); let out='【媽媽，你睡了嗎？｜孕期親密關係回顧】\n';
-  out+='填答時間：'+new Date().toLocaleString('zh-TW')+'\n';
-  out+='———————————————\n';
-  for(const key in L){
-    let v=state.data[key];
-    if(state.data['__skip_'+key]){ out+=`${L[key]}：（跳過）\n`; continue; }
-    if(v==null||v==='') continue;
-    if(typeof v==='object'){
-      let s = v.choice||'';
-      if(v.choices) s=v.choices.join('、');
-      if(v.other) s+=`（${v.other}）`;
-      if(v.week) s+=`｜約 ${v.week} 週`;
-      if(v.baby) s+=`｜寶寶 ${v.baby}`;
-      out+=`${L[key]}：${s}\n`;
-    } else out+=`${L[key]}：${v}\n`;
-  }
-  return out;
-}
-/* ====== 設定 ======
-   1) 正式使用：把 SUBMIT_URL 換成你發布 Apps Script 後拿到的網址。
-   2) 只想測體驗、還沒設後端：把 TEST_MODE 改成 true，送出會假裝成功，不會真的存資料。
-*/
 const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbwGzi_4BlphjcMYMmagMa-LzTOAy6rEMx1pW_zXOVYVzGYoO_xgistiI2FIe7E0SFQ1/exec';
-const TEST_MODE = false;
-/* ================== */
 
-function renderDone(){
-  const summary=buildSummary();
-  window._summary=summary;
-  app.innerHTML=`<div class="fade">
-    <div class="lamps">${STAGES.filter(s=>s.kind==='q').map((_,i)=>`<div class="lamp on">${i+1}</div>`).join('')}</div>
-    <div class="eyebrow center">走廊的盡頭</div>
-    <h1 class="center">燈，都亮了</h1>
-    <p class="lead center" style="margin-top:12px">
-      你剛剛走完的，不只是一份問卷——<br>是一段很多人不敢細看的路。<br>謝謝你讓我們陪你走這一遍。
-    </p>
-
-    <div class="card" id="submitCard">
-      <h2>最後一步：送出你的回顧</h2>
-      <p class="lead" style="margin-top:8px">
-        你填的內容目前只在你手機裡。按下送出後，才會不記名地存進節目的回顧紀錄，幫助我們把更貼近真實的內容做出來。
-      </p>
-      <details style="margin-top:14px"><summary style="color:var(--gold-soft);cursor:pointer;font-size:14px">先看看我要送出的內容</summary>
-        <div class="summary">${summary.replace(/</g,'&lt;')}</div>
-      </details>
-      <div class="nav" style="margin-top:18px">
-        <button class="btn btn-primary" id="sendBtn" onclick="confirmSend()">送出我的回顧</button>
-      </div>
-      <p class="q-hint center" style="margin-top:10px">你仍然可以選擇不送出，直接關掉離開就好。</p>
-    </div>
-
-    <div class="note" style="margin-top:20px">
-      需要有人說說話時：<b>1925</b> 安心專線（依舊愛我）、<b>0800-870-870</b> 孕產婦關懷專線（抱緊您）。
-    </div>
-
-    <p class="lead center" style="margin-top:24px">晚安，我們下次見 🌙</p>
-  </div>`;
-}
-
-/* 送出前確認 */
-function confirmSend(){
-  const card=document.getElementById('submitCard');
-  card.innerHTML=`
-    <h2>確定送出嗎？</h2>
-    <p class="lead" style="margin-top:8px">送出後，這份不記名的回顧就會存進節目的紀錄。你確定好了嗎？</p>
-    <div class="nav" style="margin-top:18px">
-      <button class="btn btn-ghost" onclick="renderDone()">再想一下</button>
-      <button class="btn btn-primary" onclick="doSend()">確定，送出</button>
-    </div>`;
-}
-
-/* 實際送出 */
-function doSend(){
-  const card=document.getElementById('submitCard');
-  card.innerHTML=`<h2>正在送出…</h2><p class="lead" style="margin-top:8px">謝謝你等一下下 🌙</p>`;
-
-  // 測試模式：不連後端，直接假裝成功，方便你走完流程看體驗
-  if(TEST_MODE){ setTimeout(sendSuccess, 700); return; }
-
-  if(SUBMIT_URL.startsWith('PASTE_')){
-    // 尚未設定後端網址時的保護提示（只有你會看到）
-    card.innerHTML=`<h2>尚未設定送出網址</h2>
-      <p class="lead" style="margin-top:8px">若只是想測試體驗，把程式碼裡的 TEST_MODE 改成 true 即可。<br>正式使用請依說明文件完成 Apps Script 設定，把網址貼進 SUBMIT_URL。</p>`;
-    return;
-  }
-
-  const payload = buildRow();
-  fetch(SUBMIT_URL,{
-    method:'POST',
-    // Apps Script 常見做法：用 text/plain 避開 CORS 預檢
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify(payload)
-  }).then(r=>r.json()).then(res=>{
-    if(res && res.ok) sendSuccess();
-    else sendFail();
-  }).catch(()=>sendFail());
-}
-
-function sendSuccess(){
-  const card=document.getElementById('submitCard');
-  card.innerHTML=`
-    <h2 class="center" style="color:var(--gold-d)">收到了 ✅</h2>
-    <p class="lead center" style="margin-top:10px">
-      你的聲音，我們接住了。<br>
-      謝謝你願意說出來。這是一份，只屬於你的回顧——
-    </p>
-    ${buildReport()}
-    <div id="statsArea" class="note" style="margin-top:20px">
-      <p class="center" style="color:var(--faint)">正在看看有多少人和你一起走過這條走廊…</p>
-    </div>
-    <p class="lead center" style="margin-top:18px;font-size:14px">
-      🕯 走廊上，還亮著其他人的燈<br>
-      <a class="link" href="results/">看看大家怎麼說</a><br>
-      <span style="font-size:12.5px;color:var(--faint)">收藏這個連結，之後隨時可以回來看，不用重填</span>
-    </p>
-    <p class="lead center" style="margin-top:18px">
-      🕯 想聽更多，來粉專找我們聊聊，追蹤
-      <a class="link" href="https://www.facebook.com/dearmama.tw" target="_blank" rel="noopener">《媽媽，你睡了嗎？》粉絲專頁</a>
-    </p>`;
-  loadStats('statsArea', true);
-}
-
-/* ── 個人報告 ── */
-function gc(id){ const v=state.data[id]; return (v&&v.choice)||''; }               // 單選
-function gm(id){ const v=state.data[id]; return ((v&&v.choices)||[]).filter(x=>x.indexOf('這題不適用')<0&&x!=='其他'); } // 複選(去雜項)
-function isNA(s){ return !s || s.indexOf('這題不適用')>=0 || s==='其他'; }
-
-let SHARE_LINES=[];   // 可分享區的純文字（給圖卡用；永不含私密內容）
-
-function buildReport(){
-  const stat=gc('status');
-  const feel=gc('now_feel'), inti=gc('now_intimacy');
-
-  /* 可分享區：不含任何性生活細節。以 * 標記要加粗的字 */
-  const SL=[];
-  if(stat==='懷孕中'||stat==='待產中') SL.push('此刻的你，正走在孕育一個生命的路上。');
-  else if(stat==='產後一年內') SL.push('你已經走過懷孕與生產，正在成為媽媽的路上繼續走著。');
-  else SL.push('謝謝你回頭看了這段路。');
-
-  const langs=[...new Set([...gm('pg_nonsex'),...gm('pp_nonsex')])]
-    .map(x=>x.split('（')[0]).filter(x=>x&&x.indexOf('獨處')<0);
-  const hasSpace=[...gm('pg_nonsex'),...gm('pp_nonsex')].some(x=>x.indexOf('獨處')>=0);
-  if(langs.length) SL.push(`一路上，你們用*${langs.slice(0,2).map(x=>`「${x}」`).join('、')}*彼此靠近。`);
-  if(hasSpace) SL.push('你也懂得，給彼此獨處的空間，是另一種體貼。');
-  if(!isNA(inti)) SL.push(`此刻的你：*「${inti}」*。`);
-  if(!isNA(feel)) SL.push(feel==='現在這樣，我覺得剛剛好'?'你說，*現在這樣，剛剛好*。':`你說，*「${feel}」*。`);
-  SL.push('這段路，你走得很努力。🕯');
-  SHARE_LINES=SL.slice();
-  const share=SL.map(t=>`<p>${t.replace(/\*([^*]+)\*/g,'<b>$1</b>')}</p>`).join('');
-
-  /* 私密區：性生活相關 + 對照 */
-  let priv='';
-  const pgHad=gc('pg_had'), worry=gc('pg_worry'), resume=gc('pp_resume');
-  if(pgHad==='有'){
-    priv+=`<p>孕期，你仍保有性生活。2009 年 BabyHome 的調查裡，<b>70.4% 的台灣孕媽咪也是</b>。</p>`;
-    if(worry==='非常擔心'||worry==='有點擔心'||worry==='偶爾會'){
-      priv+=`<p>你曾擔心影響寶寶。同一份調查裡，<b>八成六的孕媽咪都一樣</b>。你的小心翼翼，是愛的樣子。</p>`;
-    } else if(worry){
-      priv+=`<p>你能放鬆地享受親密，不被擔心綁住，這很珍貴。</p>`;
-    }
-  } else if(pgHad==='沒有'){
-    priv+=`<p>孕期你們暫停了性生活，調查裡也有近三成的人如此。<b>親密從來不只一種形式</b>，你們的靠近沒有少。</p>`;
-  }
-  const ppHad=gc('pp_had');
-  if(!isNA(resume)){
-    priv+=`<p>產後，你在<b>「${resume}」</b>恢復了性生活<span id="cmpResume"></span>。每個人的身體有自己的步調，你的步調就是對的步調。</p>`;
-  } else if(ppHad==='還沒有恢復'){
-    priv+=`<p>產後你還沒有恢復性生活，<b>這不需要時間表</b>。身體和心都準備好了才算準備好，你不必追上任何人的進度。</p>`;
-  } else if(ppHad.indexOf('伴侶不在身邊')>=0){
-    priv+=`<p>那段時間，你有伴侶，但他不在身邊。<b>那是一種很難說出口的孤單</b>，因為在別人眼裡，你並不是一個人。我們知道那有多累。</p>`;
-  } else if(ppHad.indexOf('沒有伴侶')>=0){
-    priv+=`<p>那段時間，你一個人走過產後。<b>那是很不容易的一段路</b>，你把自己和孩子都帶到了這裡。</p>`;
-  }
-  const reasons=[...new Set([...gm('pg_reason'),...gm('pp_reason')])].filter(x=>x!=='沒有特別原因');
-  if(reasons.length){
-    priv+=`<p>那段時間，讓事情變難的是<b>${reasons.slice(0,2).map(x=>`「${x.split('（')[0]}」`).join('、')}</b><span id="cmpReason"></span>。看見它們，就是照顧自己的開始。</p>`;
-  }
-
-  let h=`
-  <div class="card" style="margin-top:20px">
-    <h2 style="text-align:center;font-size:18px">🌙 你的時光走廊</h2>
-    <div style="margin-top:10px;font-size:14.5px;line-height:2;color:var(--body)">${share}</div>
-    <div class="center" style="margin-top:16px">
-      <button class="btn btn-primary" style="flex:none;padding:12px 26px;font-size:14.5px" onclick="makeShareCard()">🖼 做成圖卡，存下來分享</button>
-    </div>
-    <div id="cardOut" class="center"></div>
-    <p style="margin-top:10px;font-size:12px;color:var(--faint);text-align:center">圖卡只會有上面這一段，不會包含下面的私密內容。</p>
-  </div>`;
-  if(priv){
-    h+=`
-  <div class="card" style="margin-top:14px;border-style:dashed">
-    <p style="text-align:center;font-size:13px;color:var(--gold-d);font-weight:700">🔒 這一段，只給你自己看</p>
-    <div style="margin-top:8px;font-size:14px;line-height:2;color:var(--body)">${priv}</div>
-    <p style="margin-top:10px;font-size:12px;color:var(--faint);text-align:center">要不要讓別人看到這一段，由你決定。</p>
-  </div>`;
-  }
-  return h;
-}
-
-/* 統計載入後，把群體對照補進報告 */
-function fillCompare(res){
-  if(!res || !res.ok || res.n < res.minN || !res.stats) return;
-  const find=(label)=>res.stats.find(s=>s.label.indexOf(label)>=0);
-  const resumeStat=find('產後多久'), reasonStat=find('產後影響');
-  const myResume=gc('pp_resume');
-  const elR=document.getElementById('cmpResume');
-  if(elR && resumeStat && myResume){
-    const it=resumeStat.items.find(i=>i.option===myResume);
-    if(it && it.pct>=15) elR.innerHTML=`——走過這條走廊的人裡，<b>${it.pct}% 也是</b>`;
-  }
-  const elRe=document.getElementById('cmpReason');
-  const myReasons=[...gm('pg_reason'),...gm('pp_reason')];
-  if(elRe && reasonStat && myReasons.length){
-    const it=reasonStat.items.find(i=>myReasons.indexOf(i.option)>=0);
-    if(it && it.pct>=15) elRe.innerHTML=`——<b>${it.pct}% 的人也選了它</b>`;
-  }
-}
-
-/* 讀取統計並渲染（完成頁與結果頁共用）
-   withLit = true 時顯示文獻回饋段落 */
-function loadStats(targetId, withLit){
-  const box=document.getElementById(targetId);
-  if(!box) return;
-  fetch(SUBMIT_URL + '?stats=1')
-    .then(r=>r.json())
-    .then(res=>{
-      if(!res || !res.ok){ box.innerHTML=statsFallback(withLit); return; }
-      let h = `<p class="center" style="font-size:16px"><b style="color:var(--gold-d)">目前已經有 ${res.n} 位</b> 走過這條時光走廊 🕯</p>`;
-      if(withLit){
-        h += `<p style="margin-top:12px;font-size:13.5px">你知道嗎？2009 年 BabyHome 一份針對台灣孕媽咪的調查（1006 份有效樣本）發現，<b>七成（70.4%）的孕媽咪在孕期仍有性生活</b>；而其中<b>高達八成六，進行時都曾擔心影響懷孕或胎兒</b>。你的擔心、你的猶豫，很多人都一樣——你走過的，很多人也正在走。</p>`;
-      }
-      if(res.n >= res.minN && res.stats && res.stats.length){
-        h += `<div style="margin-top:16px">`;
-        res.stats.forEach(s=>{
-          h += `<p style="font-weight:700;color:var(--ink);font-size:14px;margin-top:14px">${s.label}</p>`;
-          if(s.chart==='donut' && s.items.length===2){
-            h += donutMini(s.items);
-          } else {
-            s.items.forEach(it=>{
-              h += `
-              <div style="margin-top:6px">
-                <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--body)">
-                  <span>${it.option}</span><span>${it.pct}%</span>
-                </div>
-                <div style="height:8px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden">
-                  <div style="height:100%;width:${it.pct}%;background:var(--gold);border-radius:6px"></div>
-                </div>
-              </div>`;
-            });
-          }
-          if(s.disclaimer){
-            h += `<p style="margin-top:6px;font-size:11.5px;color:var(--faint)">＊體位分享僅為經驗參考，非醫療建議；每個人孕況不同，請與你的醫師討論。</p>`;
-          }
-        });
-        h += `<p style="margin-top:12px;font-size:12px;color:var(--faint)">＊本統計為節目自行蒐集、非隨機抽樣，不代表全體。</p></div>`;
-      } else {
-        const left=Math.max(0,res.minN-res.n);
-        h += `<p style="margin-top:10px;font-size:13px;color:var(--faint)" class="center">
-        <b style="color:var(--gold-d)">再 ${left} 份，大家的分布圖就會亮起來。</b><br>
-        人數太少的時候，比例容易失真，也可能讓少數人的答案被認出來——<br>
-        所以我們寧可多等一等，再把數字說出口。<br>
-        <span style="color:var(--gold-d)">你這一份，已經讓燈更亮了一點。🕯</span></p>`;
-      }
-      box.innerHTML = h;
-      fillCompare(res);
-    })
-    .catch(()=>{ box.innerHTML=statsFallback(withLit); });
-}
-/* ── 分享圖卡（canvas 直接畫，1080×1350）── */
-function makeShareCard(){
-  const out=document.getElementById('cardOut');
-  out.innerHTML=`<p style="margin-top:12px;font-size:13px;color:var(--faint)">正在點燈…</p>`;
-  const go=()=>{ try{ drawShareCard(out); }catch(e){
-    out.innerHTML=`<p style="margin-top:12px;font-size:13px;color:var(--faint)">圖卡做不出來，不過你也可以直接截圖上面那一段 🌙</p>`; } };
-  if(document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
-}
-
-function drawShareCard(out){
-  const W=1080,H=1350;
-  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
-  const x=cv.getContext('2d');
-
-  // 底色：暖奶油漸層
-  const g=x.createRadialGradient(W/2,H*0.3,60,W/2,H*0.3,W*0.95);
-  g.addColorStop(0,'#FEFCF5'); g.addColorStop(.55,'#FBF6EC'); g.addColorStop(1,'#F3EAD6');
-  x.fillStyle=g; x.fillRect(0,0,W,H);
-
-  // 金色細邊框（在限動白底上更立體）
-  const pad=44, r=30;
-  x.beginPath();
-  x.moveTo(pad+r,pad);
-  x.lineTo(W-pad-r,pad);      x.quadraticCurveTo(W-pad,pad,W-pad,pad+r);
-  x.lineTo(W-pad,H-pad-r);    x.quadraticCurveTo(W-pad,H-pad,W-pad-r,H-pad);
-  x.lineTo(pad+r,H-pad);      x.quadraticCurveTo(pad,H-pad,pad,H-pad-r);
-  x.lineTo(pad,pad+r);        x.quadraticCurveTo(pad,pad,pad+r,pad);
-  x.closePath();
-  x.strokeStyle='#C8912E'; x.globalAlpha=.45; x.lineWidth=3; x.stroke();
-  x.globalAlpha=.18; x.lineWidth=1; x.strokeStyle='#9E6E1C';
-  x.setLineDash([]); x.stroke();
-  x.globalAlpha=1;
-
-  const SERIF='"Noto Serif TC",serif', SANS='"Noto Sans TC",sans-serif';
-  x.textAlign='center';
-
-  // 上方疏排小標
-  x.fillStyle='#C8912E'; x.font='700 27px '+SANS;
-  spaced(x,'親密關係時光走廊',W/2,140,17);
-
-  // 主標
-  x.fillStyle='#3A3222'; x.font='700 58px '+SERIF;
-  x.fillText('我的時光走廊',W/2,246);
-
-  // 金色細線
-  x.fillStyle='#C8912E'; x.globalAlpha=.6;
-  x.fillRect(W/2-38,300,76,4); x.globalAlpha=1;
-
-  // 內文：限定在 Y0～Y1 之間，優先讓每一句都不跳行
-  const Y0=350, Y1=H-210, AVAIL=Y1-Y0, MAXW=W-190;
-  let fs=0, lines=[], lh=0, block=0;
-
-  // 第一輪：找一個字級，讓每一句都能單行容納（42 → 30）
-  for(let t=42;t>=30;t-=1){
-    x.font=t+'px '+SANS;
-    const fitAll=SHARE_LINES.every(s=>x.measureText(s.replace(/\*/g,'')).width<=MAXW);
-    if(!fitAll) continue;
-    const L=Math.round(t*1.72), n=SHARE_LINES.length*2-1;
-    if(n*L<=AVAIL){ fs=t; lh=L;
-      lines=[]; SHARE_LINES.forEach((s,i)=>{ if(i) lines.push(''); lines.push(s.replace(/\*/g,'')); });
-      block=lines.length*lh; break; }
-  }
-
-  // 第二輪：真的塞不下才斷行（斷點落在標點）
-  if(!fs){
-    for(fs=40;;fs-=2){
-      lh=Math.round(fs*1.72); lines=[];
-      SHARE_LINES.forEach((t,i)=>{ if(i) lines.push('');
-        wrap(x,t.replace(/\*/g,''),MAXW,fs+'px '+SANS).forEach(s=>lines.push(s)); });
-      block=lines.length*lh;
-      if(block<=AVAIL || fs<=26) break;
-    }
-    while(block>AVAIL && lines.length>3){
-      lines.splice(lines.length-2,1); block=lines.length*lh;
-    }
-  }
-
-  x.font=fs+'px '+SANS; x.fillStyle='#6B6252'; x.textAlign='center';
-  let y=Y0+Math.max(0,(AVAIL-block)/2)+lh*0.75;
-  lines.forEach(s=>{ if(s) x.fillText(s,W/2,y); y+=lh; });
-
-  // 頁尾
-  x.fillStyle='#A99C86'; x.font='28px '+SANS;
-  x.fillText('《媽媽，你睡了嗎？》🌙',W/2,H-132);
-  x.fillText('俐伶醫師 × 小牛醫師',W/2,H-88);
-
-  const url=cv.toDataURL('image/png');
-  out.innerHTML=`
-    <img src="${url}" alt="我的時光走廊" style="width:100%;max-width:300px;border-radius:14px;border:1px solid var(--soft);margin-top:14px">
-    <div style="margin-top:10px">
-      <a class="link" href="${url}" download="我的時光走廊.png">⬇ 下載這張圖卡</a>
-    </div>
-    <p style="margin-top:6px;font-size:12px;color:var(--faint)">手機也可以長按圖片儲存</p>`;
-}
-
-// 字距排版（canvas 無 letter-spacing）
-function spaced(ctx,text,cx,y,gap){
-  const chars=[...text];
-  const w=chars.reduce((s,c)=>s+ctx.measureText(c).width+gap,0)-gap;
-  let cur=cx-w/2;
-  chars.forEach(c=>{ const cw=ctx.measureText(c).width;
-    ctx.textAlign='left'; ctx.fillText(c,cur,y); cur+=cw+gap; });
-  ctx.textAlign='center';
-}
-// 中文換行：優先在標點處斷、兩行盡量等長、避免孤字
-function wrap(ctx,text,maxW,font){
-  ctx.font=font;
-  if(ctx.measureText(text).width<=maxW) return [text];
-
-  const PUNC='，、。；：？！';
-  const cands=[];
-  for(let i=0;i<text.length-1;i++) if(PUNC.indexOf(text[i])>=0) cands.push(i+1);
-
-  // 先試「在標點處切成兩行」，取最接近正中間的切點
-  let best=null; const mid=text.length/2;
-  for(const c of cands){
-    const a=text.slice(0,c), b=text.slice(c);
-    if(ctx.measureText(a).width<=maxW && ctx.measureText(b).width<=maxW){
-      const sc=Math.abs(c-mid);
-      if(!best||sc<best.sc) best={a,b,sc};
-    }
-  }
-  if(best) return [best.a,best.b];
-
-  // 退路：逐字排，再把孤字往上收
-  const out=[]; let line='';
-  for(const ch of text){
-    if(ctx.measureText(line+ch).width>maxW && line){ out.push(line); line=ch; }
-    else line+=ch;
-  }
-  if(line) out.push(line);
-  if(out.length>1){
-    const last=out[out.length-1], prev=out[out.length-2];
-    if([...last].length<=3 && [...prev].length>5){
-      const move=[...prev].slice(-2).join('');
-      out[out.length-2]=[...prev].slice(0,-2).join('');
-      out[out.length-1]=move+last;
-    }
-  }
-  return out;
-}
-
-/* 完成頁用的小甜甜圈（二選一題） */
-function donutMini(items){
+/* 甜甜圈圖（二選一題用）：主色金、次色淺金 */
+function donutSVG(items){
   const a=items[0], b=items[1];
-  const R=48, C=2*Math.PI*R, lenA=C*a.pct/100;
+  const R=54, C=2*Math.PI*R;              // 半徑與周長
+  const lenA=C*a.pct/100;
   return `
-  <div style="display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap;justify-content:center">
-    <svg viewBox="0 0 126 126" style="width:112px;height:112px;flex:0 0 auto" role="img"
+  <div style="display:flex;align-items:center;gap:18px;margin-top:12px;flex-wrap:wrap;justify-content:center">
+    <svg viewBox="0 0 140 140" style="width:132px;height:132px;flex:0 0 auto" role="img"
          aria-label="${a.option} ${a.pct}%，${b.option} ${b.pct}%">
-      <circle cx="63" cy="63" r="${R}" fill="none" stroke="#EFE2C6" stroke-width="18"/>
-      <circle cx="63" cy="63" r="${R}" fill="none" stroke="#C8912E" stroke-width="18"
-              stroke-dasharray="${lenA} ${C-lenA}" transform="rotate(-90 63 63)"/>
-      <text x="63" y="60" text-anchor="middle" font-family="Noto Serif TC,serif"
-            font-size="23" font-weight="700" fill="#9E6E1C">${a.pct}%</text>
-      <text x="63" y="78" text-anchor="middle" font-size="10" fill="#A99C86">${a.option}</text>
+      <circle cx="70" cy="70" r="${R}" fill="none" stroke="#EFE2C6" stroke-width="20"/>
+      <circle cx="70" cy="70" r="${R}" fill="none" stroke="#C8912E" stroke-width="20"
+              stroke-dasharray="${lenA} ${C-lenA}" stroke-dashoffset="0"
+              transform="rotate(-90 70 70)" stroke-linecap="butt"/>
+      <text x="70" y="66" text-anchor="middle" font-family="Noto Serif TC,serif"
+            font-size="26" font-weight="700" fill="#9E6E1C">${a.pct}%</text>
+      <text x="70" y="86" text-anchor="middle" font-size="11" fill="#A99C86">${a.option}</text>
     </svg>
-    <div style="font-size:12.5px;line-height:1.95">
-      <div><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#C8912E;margin-right:6px"></span>${a.option} <b style="color:var(--gold-d)">${a.pct}%</b></div>
-      <div><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#EFE2C6;margin-right:6px"></span>${b.option} <b style="color:var(--gold-d)">${b.pct}%</b></div>
+    <div style="font-size:13.5px;line-height:2">
+      <div><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#C8912E;margin-right:7px"></span>${a.option} <b style="color:#9E6E1C">${a.pct}%</b></div>
+      <div><span style="display:inline-block;width:11px;height:11px;border-radius:3px;background:#EFE2C6;margin-right:7px"></span>${b.option} <b style="color:#9E6E1C">${b.pct}%</b></div>
     </div>
   </div>`;
 }
 
-function statsFallback(withLit){
-  let h='';
-  if(withLit){
-    h += `<p style="font-size:13.5px">你知道嗎？2009 年 BabyHome 一份針對台灣孕媽咪的調查（1006 份有效樣本）發現，<b>七成（70.4%）的孕媽咪在孕期仍有性生活</b>；而其中<b>高達八成六，進行時都曾擔心影響懷孕或胎兒</b>。你走過的，很多人也正在走。</p>`;
-  }
-  h += `<p class="center" style="margin-top:10px;font-size:12.5px;color:var(--faint)">🕯 大家的心聲正在陸續點亮，累積滿 30 份之後，這裡會展示統計分布。<br>你剛剛送出的內容已經收到了，請耐心等我們一下。</p>`;
-  return h;
-}
-function sendFail(){
-  const card=document.getElementById('submitCard');
-  card.innerHTML=`
-    <h2>送出沒成功</h2>
-    <p class="lead" style="margin-top:8px">可能是網路的關係。你可以再試一次；如果還是不行，也可以直接關掉，不影響你。</p>
-    <div class="nav" style="margin-top:16px">
-      <button class="btn btn-primary" onclick="doSend()">再試一次</button>
-    </div>`;
-}
+fetch(SUBMIT_URL + '?stats=1')
+  .then(r=>r.json())
+  .then(res=>{
+    const counter=document.getElementById('counter');
+    const card=document.getElementById('statsCard');
+    if(!res || !res.ok){ showWaiting(); return; }
 
-/* 把答案攤平成「一行一人」的物件，欄位 key 固定，方便試算表對欄 */
-function buildRow(){
-  const L=labelMap(); const row={};
-  row['填答時間']=new Date().toLocaleString('zh-TW');
-  for(const key in L){
-    const label=L[key];
-    if(state.data['__skip_'+key]){ row[label]='（跳過）'; continue; }
-    let v=state.data[key];
-    if(v==null||v===''){ row[label]=''; continue; }
-    if(typeof v==='object'){
-      let s=v.choice||'';
-      if(v.choices) s=v.choices.join('、');
-      if(v.other) s+=`（${v.other}）`;
-      if(v.week) s+=`｜約${v.week}週`;
-      if(v.baby) s+=`｜寶寶${v.baby}`;
-      row[label]=s;
-    } else row[label]=v;
-  }
-  return row;
-}
+    counter.innerHTML = `目前已經有 <b>${res.n}</b> 位，走過這條時光走廊 🕯`;
 
-render();
+    if(res.n >= res.minN && res.stats && res.stats.length){
+      let h='';
+      res.stats.forEach(s=>{
+        h += `<p class="stat-label">${s.label}</p>`;
+        if(s.chart==='donut' && s.items.length===2){
+          h += donutSVG(s.items);
+        } else {
+          s.items.forEach(it=>{
+            h += `
+            <div class="bar-row">
+              <div class="bar-head"><span>${it.option}</span><span>${it.pct}%</span></div>
+              <div class="bar-track"><div class="bar-fill" style="width:${it.pct}%"></div></div>
+            </div>`;
+          });
+        }
+        if(s.disclaimer){
+          h += `<p class="footnote" style="margin-top:8px">＊體位分享僅為經驗參考，非醫療建議；每個人孕況不同，請與你的醫師討論。</p>`;
+        }
+      });
+      h += `<p class="footnote">＊本統計為節目《媽媽，你睡了嗎？》自行蒐集、非隨機抽樣，不代表全體。每題以有作答者為分母。</p>`;
+      card.innerHTML=h;
+    } else {
+      const left=Math.max(0,res.minN-res.n);
+      card.innerHTML = `<p class="waiting"><span style="color:var(--gold-d);font-weight:700;font-size:16px">再 ${left} 份，分布圖就會亮起來</span><br><br>
+      人數太少的時候，比例容易失真，<br>也可能讓少數人的答案被認出來。<br>
+      所以我們寧可多等一等，再把數字說出口。<br><br>
+      現在每一份心聲，都在把燈點得更亮。🕯</p>`;
+    }
+  })
+  .catch(()=>{ showWaiting(); });
+
+/* 讀不到統計時的畫面：溫和的等待訊息（人數不會顯示，方便你判斷後端狀況） */
+function showWaiting(){
+  document.getElementById('counter').innerHTML='🕯 大家的心聲，正在陸續點亮';
+  document.getElementById('statsCard').innerHTML=
+    `<p class="waiting">累積滿 30 份之後，<br>這裡就會展示大家的統計分布。<br><br>
+     人數太少的時候，比例容易失真，<br>也可能讓少數人的答案被認出來，<br>
+     所以我們寧可多等一等，再把數字說出口。<br><br>
+     請耐心等我們一下，<br>之後隨時可以回來看看。🌙</p>`;
+}
 </script>
 </body>
 </html>
