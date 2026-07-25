@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大家的心聲｜親密關係時光走廊</title>
+<meta name="description" content="親密關係時光走廊問卷的即時統計。看看有多少人走過這條走廊、大家的心聲分布。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FBF6EC; --cream-2:#F5ECDA; --soft:#EFE2C6;
+    --gold:#C8912E; --gold-d:#9E6E1C; --gold-soft:#E0B764;
+    --ink:#3A3222; --body:#6B6252; --faint:#A99C86; --line:#E4D6BA; --help:#FBEFD6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+    background:radial-gradient(ellipse 75% 50% at 50% 20%, #FEFCF5 0%, var(--cream) 58%, #F3EAD6 100%);
+    color:var(--body); line-height:1.75; min-height:100vh;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:40px 20px 96px}
+  .eyebrow{color:var(--gold);font-size:13px;letter-spacing:3px;margin-bottom:10px;font-weight:600;text-align:center}
+  h1{font-family:"Noto Serif TC",serif;font-weight:700;font-size:26px;color:var(--ink);text-align:center;line-height:1.5}
+  .lead{color:var(--body);font-size:15px;text-align:center;margin-top:8px}
+  .rule{width:38px;height:2px;background:var(--gold);opacity:.55;border-radius:2px;margin:24px auto}
+  .card{background:var(--cream-2);border:1px solid var(--soft);border-radius:18px;padding:24px 20px;margin-top:18px;
+    box-shadow:0 8px 24px rgba(160,122,74,.06)}
+  .counter{background:var(--help);border:1px solid var(--soft);border-radius:999px;
+    padding:14px 24px;text-align:center;font-size:17px;color:var(--body);margin:20px auto;max-width:420px}
+  .counter b{color:var(--gold-d);font-size:22px}
+  .stat-label{font-weight:700;color:var(--ink);font-size:15px;margin-top:20px;font-family:"Noto Serif TC",serif}
+  .bar-row{margin-top:8px}
+  .bar-head{display:flex;justify-content:space-between;font-size:13px;color:var(--body)}
+  .bar-track{height:10px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:3px}
+  .bar-fill{height:100%;background:var(--gold);border-radius:6px;transition:width .8s ease}
+  .footnote{font-size:12px;color:var(--faint);margin-top:16px}
+  .waiting{text-align:center;color:var(--faint);font-size:14px;padding:20px 0}
+  .cta{text-align:center;margin-top:28px;font-size:14px}
+  a.link{color:var(--gold-d);font-weight:700;text-decoration:none;border-bottom:1.5px solid var(--soft);padding-bottom:1px}
+  a.link:hover{border-bottom-color:var(--gold)}
+  .btn{display:inline-block;background:var(--gold);color:#fff;font-weight:700;border:none;border-radius:999px;
+    padding:13px 32px;font-size:15px;text-decoration:none;box-shadow:0 6px 18px rgba(200,145,46,.28);margin-top:10px}
+  .btn:hover{background:var(--gold-d)}
+  .moon{text-align:center;color:var(--gold-d);font-size:26px;margin-top:34px}
+  .brand{text-align:center;color:var(--faint);font-size:13px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">親　密　關　係　時　光　走　廊</div>
+  <h1>大家的心聲</h1>
+  <p class="lead">走過這條走廊的每一個人，都留下了一點光。</p>
+  <div class="rule"></div>
+
+  <div class="counter" id="counter">正在點亮燈…</div>
+
+  <div class="card" id="statsCard">
+    <p class="waiting">正在整理大家的心聲…</p>
+  </div>
+
+  <div class="cta">
+    <p>還沒走過這條走廊嗎？</p>
+    <a class="btn" href="index.html">🕯 我也要留下我的心聲</a>
+  </div>
+
+  <div class="moon">🌙</div>
+  <div class="brand">俐伶醫師 × 小牛醫師｜《媽媽，你睡了嗎？》</div>
+</div>
+
+<script>
+const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbwGzi_4BlphjcMYMmagMa-LzTOAy6rEMx1pW_zXOVYVzGYoO_xgistiI2FIe7E0SFQ1/exec';
+
+fetch(SUBMIT_URL + '?stats=1')
+  .then(r=>r.json())
+  .then(res=>{
+    const counter=document.getElementById('counter');
+    const card=document.getElementById('statsCard');
+    if(!res || !res.ok){ counter.textContent='統計暫時讀取不到，晚點再來看看。'; card.innerHTML=''; return; }
+
+    counter.innerHTML = `目前已經有 <b>${res.n}</b> 位，走過這條時光走廊 🕯`;
+
+    if(res.n >= res.minN && res.stats && res.stats.length){
+      let h='';
+      res.stats.forEach(s=>{
+        h += `<p class="stat-label">${s.label}</p>`;
+        s.items.forEach(it=>{
+          h += `
+          <div class="bar-row">
+            <div class="bar-head"><span>${it.option}</span><span>${it.pct}%</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:${it.pct}%"></div></div>
+          </div>`;
+        });
+        if(s.disclaimer){
+          h += `<p class="footnote" style="margin-top:8px">＊體位分享僅為經驗參考，非醫療建議；每個人孕況不同，請與你的醫師討論。</p>`;
+        }
+      });
+      h += `<p class="footnote">＊本統計為節目《媽媽，你睡了嗎？》自行蒐集、非隨機抽樣，不代表全體。每題以有作答者為分母。</p>`;
+      card.innerHTML=h;
+    } else {
+      card.innerHTML = `<p class="waiting">等大家的心聲收集滿 ${res.minN} 份，<br>這裡就會亮起大家的分布圖。<br><br>現在每一份，都在把燈點得更亮。🕯</p>`;
+    }
+  })
+  .catch(()=>{
+    document.getElementById('counter').textContent='統計暫時讀取不到，晚點再來看看。';
+    document.getElementById('statsCard').innerHTML='';
+  });
+</script>
+</body>
+</html>
