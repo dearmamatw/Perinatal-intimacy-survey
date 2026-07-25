@@ -114,7 +114,7 @@ fetch(SUBMIT_URL + '?stats=1')
   .then(res=>{
     const counter=document.getElementById('counter');
     const card=document.getElementById('statsCard');
-    if(!res || !res.ok){ counter.textContent='統計暫時讀取不到，晚點再來看看。'; card.innerHTML=''; return; }
+    if(!res || !res.ok){ showWaiting(); return; }
 
     counter.innerHTML = `目前已經有 <b>${res.n}</b> 位，走過這條時光走廊 🕯`;
 
@@ -140,16 +140,24 @@ fetch(SUBMIT_URL + '?stats=1')
       h += `<p class="footnote">＊本統計為節目《媽媽，你睡了嗎？》自行蒐集、非隨機抽樣，不代表全體。每題以有作答者為分母。</p>`;
       card.innerHTML=h;
     } else {
-      card.innerHTML = `<p class="waiting">大家的分布圖，會在收集滿 ${res.minN} 份之後亮起。<br><br>
+      const left=Math.max(0,res.minN-res.n);
+      card.innerHTML = `<p class="waiting"><span style="color:var(--gold-d);font-weight:700;font-size:16px">再 ${left} 份，分布圖就會亮起來</span><br><br>
       人數太少的時候，比例容易失真，<br>也可能讓少數人的答案被認出來。<br>
       所以我們寧可多等一等，再把數字說出口。<br><br>
       現在每一份心聲，都在把燈點得更亮。🕯</p>`;
     }
   })
-  .catch(()=>{
-    document.getElementById('counter').textContent='統計暫時讀取不到，晚點再來看看。';
-    document.getElementById('statsCard').innerHTML='';
-  });
+  .catch(()=>{ showWaiting(); });
+
+/* 讀不到統計時的畫面：溫和的等待訊息（人數不會顯示，方便你判斷後端狀況） */
+function showWaiting(){
+  document.getElementById('counter').innerHTML='🕯 大家的心聲，正在陸續點亮';
+  document.getElementById('statsCard').innerHTML=
+    `<p class="waiting">累積滿 30 份之後，<br>這裡就會展示大家的統計分布。<br><br>
+     人數太少的時候，比例容易失真，<br>也可能讓少數人的答案被認出來，<br>
+     所以我們寧可多等一等，再把數字說出口。<br><br>
+     請耐心等我們一下，<br>之後隨時可以回來看看。🌙</p>`;
+}
 </script>
 </body>
 </html>
