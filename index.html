@@ -180,7 +180,7 @@ const STAGES = [
       {id:'pre_sat_sex', type:'single', num:'題 3', text:'那段期間，性生活的滿意度？', hint:'若沒有性生活可跳過',
        opts:['非常滿意','滿意','普通','不滿意','非常不滿意'], skippable:true},
       {id:'pre_sat_rel', type:'single', num:'題 4', text:'那段期間，和伴侶的關係滿意度？',
-       opts:['這題不適用','非常滿意','滿意','普通','不滿意','非常不滿意'], skippable:true},
+       opts:['非常滿意','滿意','普通','不滿意','非常不滿意','這題不適用（當時沒有伴侶）'], skippable:true},
     ]
   },
   { kind:'q', title:'孕期', n:'第三盞燈', sub:'從懷孕到生產前的這段路。這一關會先問你孕期有沒有性生活，再往下走',
@@ -199,7 +199,7 @@ const STAGES = [
       {id:'pg_reason', type:'multi', num:'題 6', text:'孕期影響性生活的原因？', hint:'可複選',
        opts:['身體不適（孕吐、脹氣等）','感覺疲倦、沒有體力','提不起興致、沒有慾望','擔心傷害胎兒','醫囑限制（安胎、前置胎盤等）','身體外觀改變、沒有自信','情緒低落或焦慮','伴侶興致降低、或主動避免','性交疼痛或不適（乾澀、姿勢困難等）','沒有特別原因','其他'], other:true, skippable:true},
       {id:'pg_relplus', type:'single', num:'題 7', text:'你覺得孕期有性生活，對你們的伴侶關係影響是？',
-       opts:['這題不適用','感情加溫，更加親密','沒有影響，一如往常','壓力山大、有些負擔','說不上來，好像有又好像沒有'], skippable:true},
+       opts:['感情加溫，更加親密','沒有影響，一如往常','壓力山大、有些負擔','說不上來，好像有又好像沒有','這題不適用'], skippable:true},
       {id:'pg_nonsex', type:'multi', num:'題 8', text:'孕期中除了性行為以外，你們用什麼方式維繫親密關係？', hint:'可複選；這五種取自「愛的五種語言」',
        opts:['這題不適用','肯定的言語（稱讚、感謝、我愛你）','精心的時刻（專心相處、好好說話）','服務的行動（幫忙分擔、照顧起居）','身體的接觸（擁抱、牽手、依偎）','贈送的禮物（用心準備的小驚喜）','其他'], other:true, skippable:true},
 
@@ -208,27 +208,27 @@ const STAGES = [
       {id:'pg_position', type:'multi', num:'題 9', text:'孕期嘗試性行為時，哪些體位讓你覺得比較舒服、比較安心？', hint:'可複選；沒試過但好奇也有選項',
        opts:['男上體位（傳教士，男生在上、女方平躺）','女上體位（騎乘式，自己控制節奏與深度）','側入體位（湯匙式，兩人側躺）','後入體位（後背式，趴跪、不壓迫腹部）','坐姿體位（蓮花式，面對面坐、互相環抱）','半躺體位（床沿式，女生躺床沿、臀部靠邊，男生站或跪）','只要不壓到肚子，哪種都可以','其實怎樣都不太舒服','我沒試過，但很好奇','我沒試過，也還不敢試','其他'], other:true, skippable:true},
       {id:'pg_foreplay', type:'single', num:'題 10', text:'孕期時，你們需要比孕前更多的前戲或鋪陳嗎？', hint:'前戲指進入性行為前的親吻、撫摸、營造氣氛等',
-       opts:['這題不適用','比以前更需要醞釀','跟孕前差不多','其實比以前更快有感覺','我沒試過，但很好奇'], skippable:true},
+       opts:['比以前更需要醞釀','跟孕前差不多','其實比以前更快有感覺','我沒試過，但很好奇','這題不適用'], skippable:true},
       {id:'pg_share', type:'textarea', num:'題 11', text:'關於孕期的性與親密，有沒有什麼「我後來才發現、早知道就好」的經驗想分享給其他夫妻？',
        hint:'例如哪個姿勢比較舒服、怎麼跟另一半開口、怎麼放鬆心情不緊張——任何一句真心話，都可能幫到正在猶豫的人。可跳過。', skippable:true},
     ]
   },
-  { kind:'q', title:'那次產後（第四孕期）', n:'第四盞燈', sub:'你選來回答的那一次，生完之後那段沒人細說的日子',
+  { kind:'q', title:'那次產後的第一年', n:'第四盞燈', sub:'你選來回答的那一次，生完之後的那一年，那段沒人細說的日子',
     qs:[
-      {id:'pp_had', type:'single', num:'題 1', text:'那次產後，你有恢復性生活嗎？',
-       hint:'若選「沒有／還沒有」，下面關於性行為的題目都可跳過',
-       opts:['有恢復','沒有／還沒有恢復','那段時間沒有伴侶'], skippable:true},
-      {id:'pp_resume', type:'single', num:'題 2', text:'那次產後大約多久恢復性生活？', hint:'俗稱「開機」；若沒有恢復可跳過',
-       opts:['月子期間','產後 1–2 個月','產後 3–6 個月','產後半年以上'], skippable:true},
-      {id:'pp_reason', type:'multi', num:'題 3', text:'那段時間影響性生活／親密關係的原因？', hint:'可複選',
-       opts:['傷口尚未復原（會陰、剖腹產傷口等）','睡眠不足、只想睡覺','育兒壓力大、分身乏術','哺乳影響（脹奶、溢奶等）','性交疼痛或乾澀','情緒低落、產後憂鬱','對身體外觀沒有自信','伴侶興致降低、或主動避免','只想有自己的空間、不想被碰觸','沒有特別原因','其他'], other:true, skippable:true},
-      {id:'pp_sat_sex', type:'single', num:'題 4', text:'那段時間，性生活的滿意度？', hint:'若那時沒有性生活可跳過',
-       opts:['那段時間沒有性生活','非常滿意','滿意','普通','不滿意','非常不滿意'], skippable:true},
+      {id:'pp_had', type:'single', num:'題 1', text:'那次產後的第一年裡，你有恢復性生活嗎？',
+       hint:'後面三種情況都沒關係，接下來的題目都有「這題不適用」可以選，或直接跳過',
+       opts:['有恢復','還沒有恢復','那段時間，伴侶不在身邊（外派、工作或其他原因）','那段時間，我身邊沒有伴侶'], skippable:true},
+      {id:'pp_resume', type:'single', num:'題 2', text:'那次產後大約多久恢復性生活？', hint:'俗稱「開機」',
+       opts:['月子期間','產後 1–2 個月','產後 3–6 個月','產後 7–12 個月','一年以後才恢復','這題不適用'], skippable:true},
+      {id:'pp_reason', type:'multi', num:'題 3', text:'那段時間影響性生活／親密關係的原因？', hint:'可複選；還沒恢復的人，也可以選那些讓你還沒準備好的原因',
+       opts:['這題不適用','傷口尚未復原（會陰、剖腹產傷口等）','睡眠不足、只想睡覺','育兒壓力大、分身乏術','哺乳影響（脹奶、溢奶等）','性交疼痛或乾澀','情緒低落、產後憂鬱','對身體外觀沒有自信','伴侶興致降低、或主動避免','只想有自己的空間、不想被碰觸','沒有特別原因','其他'], other:true, skippable:true},
+      {id:'pp_sat_sex', type:'single', num:'題 4', text:'那段時間，性生活的滿意度？',
+       opts:['非常滿意','滿意','普通','不滿意','非常不滿意','這題不適用（那段時間沒有性生活）'], skippable:true},
       {id:'pp_worry', type:'single', num:'題 5', text:'那段時間，你會不會擔心當下的親密關係？',
-       opts:['非常擔心','有點擔心','偶爾會','幾乎不擔心','那段時間沒有伴侶'], skippable:true},
+       opts:['非常擔心','有點擔心','偶爾會','幾乎不擔心','這題不適用'], skippable:true},
       {id:'pp_nonsex', type:'multi', num:'題 6', text:'那段時間除了性行為，你們用什麼方式維持親密關係？', hint:'可複選',
-       opts:['肯定的言語（稱讚、感謝、我愛你）','精心的時刻（專心相處、好好說話）','服務的行動（幫忙分擔、照顧起居）','身體的接觸（擁抱、牽手、依偎）','贈送的禮物（用心準備的小驚喜）','給彼此獨處的空間，也是一種體貼','這題不適用','其他'], other:true, skippable:true},
-      {id:'pp_biggest', type:'textarea', num:'題 7', text:'那段產後時間，對你們親密關係影響最大的因素是？', hint:'是身體、情緒、壓力，還是你們之間的溝通？', skippable:true},
+       opts:['這題不適用','肯定的言語（稱讚、感謝、我愛你）','精心的時刻（專心相處、好好說話）','服務的行動（幫忙分擔、照顧起居）','身體的接觸（擁抱、牽手、依偎）','贈送的禮物（用心準備的小驚喜）','給彼此獨處的空間，也是一種體貼','其他'], other:true, skippable:true},
+      {id:'pp_biggest', type:'textarea', num:'題 7', text:'產後那一年，對你們親密關係影響最大的因素是？', hint:'是身體、情緒、壓力，還是你們之間的溝通？', skippable:true},
     ]
   },
   { kind:'q', title:'此時此刻', n:'第五盞燈', sub:'前面聊的是過去，這一小段想問問你此刻的狀態',
@@ -587,42 +587,54 @@ function sendSuccess(){
 
 /* ── 個人報告 ── */
 function gc(id){ const v=state.data[id]; return (v&&v.choice)||''; }               // 單選
-function gm(id){ const v=state.data[id]; return ((v&&v.choices)||[]).filter(x=>x!=='這題不適用'&&x!=='其他'); } // 複選(去雜項)
+function gm(id){ const v=state.data[id]; return ((v&&v.choices)||[]).filter(x=>x.indexOf('這題不適用')<0&&x!=='其他'); } // 複選(去雜項)
+function isNA(s){ return !s || s.indexOf('這題不適用')>=0 || s==='其他'; }
+
+let SHARE_LINES=[];   // 可分享區的純文字（給圖卡用；永不含私密內容）
 
 function buildReport(){
   const stat=gc('status');
   const feel=gc('now_feel'), inti=gc('now_intimacy');
 
-  /* 可分享區：不含任何性生活細節 */
-  let share='';
-  if(stat==='懷孕中'||stat==='待產中') share+=`<p>此刻的你，正走在孕育一個生命的路上。</p>`;
-  else if(stat==='產後') share+=`<p>你已經走過懷孕與生產，正在成為媽媽的路上繼續走著。</p>`;
-  else share+=`<p>謝謝你回頭看了這段路。</p>`;
+  /* 可分享區：不含任何性生活細節。以 * 標記要加粗的字 */
+  const SL=[];
+  if(stat==='懷孕中'||stat==='待產中') SL.push('此刻的你，正走在孕育一個生命的路上。');
+  else if(stat==='產後') SL.push('你已經走過懷孕與生產，正在成為媽媽的路上繼續走著。');
+  else SL.push('謝謝你回頭看了這段路。');
 
   const langs=[...new Set([...gm('pg_nonsex'),...gm('pp_nonsex')])]
-    .map(x=>x.split('（')[0]).filter(x=>x&&x!=='給彼此獨處的空間，也是一種體貼');
+    .map(x=>x.split('（')[0]).filter(x=>x&&x.indexOf('獨處')<0);
   const hasSpace=[...gm('pg_nonsex'),...gm('pp_nonsex')].some(x=>x.indexOf('獨處')>=0);
-  if(langs.length) share+=`<p>一路上，你們用<b>${langs.slice(0,3).map(x=>`「${x}」`).join('、')}</b>彼此靠近。</p>`;
-  if(hasSpace) share+=`<p>你也懂得，給彼此獨處的空間，是另一種體貼。</p>`;
-  if(inti) share+=`<p>此刻的你：<b>「${inti}」</b>。</p>`;
-  if(feel) share+=`<p>你說，${feel==='現在這樣，我覺得剛剛好'?'<b>現在這樣，剛剛好</b>':'<b>「'+feel+'」</b>'}。</p>`;
-  share+=`<p style="margin-top:10px">這段路，你走得很努力。🕯</p>`;
+  if(langs.length) SL.push(`一路上，你們用*${langs.slice(0,3).map(x=>`「${x}」`).join('、')}*彼此靠近。`);
+  if(hasSpace) SL.push('你也懂得，給彼此獨處的空間，是另一種體貼。');
+  if(!isNA(inti)) SL.push(`此刻的你：*「${inti}」*。`);
+  if(!isNA(feel)) SL.push(feel==='現在這樣，我覺得剛剛好'?'你說，*現在這樣，剛剛好*。':`你說，*「${feel}」*。`);
+  SL.push('這段路，你走得很努力。🕯');
+  SHARE_LINES=SL.slice();
+  const share=SL.map(t=>`<p>${t.replace(/\*([^*]+)\*/g,'<b>$1</b>')}</p>`).join('');
 
   /* 私密區：性生活相關 + 對照 */
   let priv='';
   const pgHad=gc('pg_had'), worry=gc('pg_worry'), resume=gc('pp_resume');
   if(pgHad==='有'){
-    priv+=`<p>孕期，你仍保有性生活——2009 年 BabyHome 的調查裡，<b>70.4% 的台灣孕媽咪也是</b>。</p>`;
+    priv+=`<p>孕期，你仍保有性生活。2009 年 BabyHome 的調查裡，<b>70.4% 的台灣孕媽咪也是</b>。</p>`;
     if(worry==='非常擔心'||worry==='有點擔心'||worry==='偶爾會'){
-      priv+=`<p>你曾擔心影響寶寶——同一份調查裡，<b>八成六的孕媽咪都一樣</b>。你的小心翼翼，是愛的樣子。</p>`;
+      priv+=`<p>你曾擔心影響寶寶。同一份調查裡，<b>八成六的孕媽咪都一樣</b>。你的小心翼翼，是愛的樣子。</p>`;
     } else if(worry){
-      priv+=`<p>你能放鬆地享受親密，不被擔心綁住——這很珍貴。</p>`;
+      priv+=`<p>你能放鬆地享受親密，不被擔心綁住，這很珍貴。</p>`;
     }
   } else if(pgHad==='沒有'){
-    priv+=`<p>孕期你們暫停了性生活——調查裡也有近三成的人如此。<b>親密從來不只一種形式</b>，你們的靠近沒有少。</p>`;
+    priv+=`<p>孕期你們暫停了性生活，調查裡也有近三成的人如此。<b>親密從來不只一種形式</b>，你們的靠近沒有少。</p>`;
   }
-  if(resume){
+  const ppHad=gc('pp_had');
+  if(!isNA(resume)){
     priv+=`<p>產後，你在<b>「${resume}」</b>恢復了性生活<span id="cmpResume"></span>。每個人的身體有自己的步調，你的步調就是對的步調。</p>`;
+  } else if(ppHad==='還沒有恢復'){
+    priv+=`<p>產後你還沒有恢復性生活，<b>這不需要時間表</b>。身體和心都準備好了才算準備好，你不必追上任何人的進度。</p>`;
+  } else if(ppHad.indexOf('伴侶不在身邊')>=0){
+    priv+=`<p>那段時間，你有伴侶，但他不在身邊。<b>那是一種很難說出口的孤單</b>，因為在別人眼裡，你並不是一個人。我們知道那有多累。</p>`;
+  } else if(ppHad.indexOf('沒有伴侶')>=0){
+    priv+=`<p>那段時間，你一個人走過產後。<b>那是很不容易的一段路</b>，你把自己和孩子都帶到了這裡。</p>`;
   }
   const reasons=[...new Set([...gm('pg_reason'),...gm('pp_reason')])].filter(x=>x!=='沒有特別原因');
   if(reasons.length){
@@ -633,7 +645,11 @@ function buildReport(){
   <div class="card" style="margin-top:20px">
     <h2 style="text-align:center;font-size:18px">🌙 你的時光走廊</h2>
     <div style="margin-top:10px;font-size:14.5px;line-height:2;color:var(--body)">${share}</div>
-    <p style="margin-top:12px;font-size:12px;color:var(--faint);text-align:center">這一段，歡迎截圖分享，讓更多人知道自己並不孤單。</p>
+    <div class="center" style="margin-top:16px">
+      <button class="btn btn-primary" style="flex:none;padding:12px 26px;font-size:14.5px" onclick="makeShareCard()">🖼 做成圖卡，存下來分享</button>
+    </div>
+    <div id="cardOut" class="center"></div>
+    <p style="margin-top:10px;font-size:12px;color:var(--faint);text-align:center">圖卡只會有上面這一段，不會包含下面的私密內容。</p>
   </div>`;
   if(priv){
     h+=`
@@ -682,17 +698,21 @@ function loadStats(targetId, withLit){
         h += `<div style="margin-top:16px">`;
         res.stats.forEach(s=>{
           h += `<p style="font-weight:700;color:var(--ink);font-size:14px;margin-top:14px">${s.label}</p>`;
-          s.items.forEach(it=>{
-            h += `
-            <div style="margin-top:6px">
-              <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--body)">
-                <span>${it.option}</span><span>${it.pct}%</span>
-              </div>
-              <div style="height:8px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden">
-                <div style="height:100%;width:${it.pct}%;background:var(--gold);border-radius:6px"></div>
-              </div>
-            </div>`;
-          });
+          if(s.chart==='donut' && s.items.length===2){
+            h += donutMini(s.items);
+          } else {
+            s.items.forEach(it=>{
+              h += `
+              <div style="margin-top:6px">
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--body)">
+                  <span>${it.option}</span><span>${it.pct}%</span>
+                </div>
+                <div style="height:8px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden">
+                  <div style="height:100%;width:${it.pct}%;background:var(--gold);border-radius:6px"></div>
+                </div>
+              </div>`;
+            });
+          }
           if(s.disclaimer){
             h += `<p style="margin-top:6px;font-size:11.5px;color:var(--faint)">＊體位分享僅為經驗參考，非醫療建議；每個人孕況不同，請與你的醫師討論。</p>`;
           }
@@ -707,6 +727,110 @@ function loadStats(targetId, withLit){
     })
     .catch(()=>{ box.innerHTML=statsFallback(withLit); });
 }
+/* ── 分享圖卡（canvas 直接畫，1080×1350）── */
+function makeShareCard(){
+  const out=document.getElementById('cardOut');
+  out.innerHTML=`<p style="margin-top:12px;font-size:13px;color:var(--faint)">正在點燈…</p>`;
+  const go=()=>{ try{ drawShareCard(out); }catch(e){
+    out.innerHTML=`<p style="margin-top:12px;font-size:13px;color:var(--faint)">圖卡做不出來，不過你也可以直接截圖上面那一段 🌙</p>`; } };
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(go); else go();
+}
+
+function drawShareCard(out){
+  const W=1080,H=1350;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const x=cv.getContext('2d');
+
+  // 底色：暖奶油漸層
+  const g=x.createRadialGradient(W/2,H*0.3,60,W/2,H*0.3,W*0.95);
+  g.addColorStop(0,'#FEFCF5'); g.addColorStop(.55,'#FBF6EC'); g.addColorStop(1,'#F3EAD6');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+
+  const SERIF='"Noto Serif TC",serif', SANS='"Noto Sans TC",sans-serif';
+  x.textAlign='center';
+
+  // 上方疏排小標
+  x.fillStyle='#C8912E'; x.font='700 27px '+SANS;
+  spaced(x,'親密關係時光走廊',W/2,140,17);
+
+  // 主標
+  x.fillStyle='#3A3222'; x.font='700 58px '+SERIF;
+  x.fillText('我的時光走廊',W/2,246);
+
+  // 金色細線
+  x.fillStyle='#C8912E'; x.globalAlpha=.6;
+  x.fillRect(W/2-38,300,76,4); x.globalAlpha=1;
+
+  // 內文（自動換行 + 垂直居中）
+  const lines=[];
+  SHARE_LINES.forEach(t=>{
+    wrap(x,t.replace(/\*/g,''),820,'42px '+SANS).forEach(s=>lines.push(s));
+    lines.push('');                       // 段落間空一行
+  });
+  if(lines.length&&lines[lines.length-1]==='') lines.pop();
+  const lh=72, block=lines.length*lh;
+  let y=Math.max(400,(H-block)/2-30);
+  x.font='42px '+SANS;
+  lines.forEach(s=>{ x.fillStyle='#6B6252'; x.fillText(s,W/2,y); y+=lh; });
+
+  // 頁尾
+  x.fillStyle='#9E6E1C'; x.font='40px '+SANS; x.fillText('🌙',W/2,H-190);
+  x.fillStyle='#A99C86'; x.font='28px '+SANS;
+  x.fillText('《媽媽，你睡了嗎？》',W/2,H-130);
+  x.fillText('俐伶醫師 × 小牛醫師',W/2,H-88);
+
+  const url=cv.toDataURL('image/png');
+  out.innerHTML=`
+    <img src="${url}" alt="我的時光走廊" style="width:100%;max-width:300px;border-radius:14px;border:1px solid var(--soft);margin-top:14px">
+    <div style="margin-top:10px">
+      <a class="link" href="${url}" download="我的時光走廊.png">⬇ 下載這張圖卡</a>
+    </div>
+    <p style="margin-top:6px;font-size:12px;color:var(--faint)">手機也可以長按圖片儲存</p>`;
+}
+
+// 字距排版（canvas 無 letter-spacing）
+function spaced(ctx,text,cx,y,gap){
+  const chars=[...text];
+  const w=chars.reduce((s,c)=>s+ctx.measureText(c).width+gap,0)-gap;
+  let cur=cx-w/2;
+  chars.forEach(c=>{ const cw=ctx.measureText(c).width;
+    ctx.textAlign='left'; ctx.fillText(c,cur,y); cur+=cw+gap; });
+  ctx.textAlign='center';
+}
+// 中文換行
+function wrap(ctx,text,maxW,font){
+  ctx.font=font;
+  const out=[]; let line='';
+  for(const ch of text){
+    if(ctx.measureText(line+ch).width>maxW && line){ out.push(line); line=ch; }
+    else line+=ch;
+  }
+  if(line) out.push(line);
+  return out;
+}
+
+/* 完成頁用的小甜甜圈（二選一題） */
+function donutMini(items){
+  const a=items[0], b=items[1];
+  const R=48, C=2*Math.PI*R, lenA=C*a.pct/100;
+  return `
+  <div style="display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap;justify-content:center">
+    <svg viewBox="0 0 126 126" style="width:112px;height:112px;flex:0 0 auto" role="img"
+         aria-label="${a.option} ${a.pct}%，${b.option} ${b.pct}%">
+      <circle cx="63" cy="63" r="${R}" fill="none" stroke="#EFE2C6" stroke-width="18"/>
+      <circle cx="63" cy="63" r="${R}" fill="none" stroke="#C8912E" stroke-width="18"
+              stroke-dasharray="${lenA} ${C-lenA}" transform="rotate(-90 63 63)"/>
+      <text x="63" y="60" text-anchor="middle" font-family="Noto Serif TC,serif"
+            font-size="23" font-weight="700" fill="#9E6E1C">${a.pct}%</text>
+      <text x="63" y="78" text-anchor="middle" font-size="10" fill="#A99C86">${a.option}</text>
+    </svg>
+    <div style="font-size:12.5px;line-height:1.95">
+      <div><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#C8912E;margin-right:6px"></span>${a.option} <b style="color:var(--gold-d)">${a.pct}%</b></div>
+      <div><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#EFE2C6;margin-right:6px"></span>${b.option} <b style="color:var(--gold-d)">${b.pct}%</b></div>
+    </div>
+  </div>`;
+}
+
 function statsFallback(withLit){
   let h='';
   if(withLit){

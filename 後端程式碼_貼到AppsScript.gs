@@ -78,7 +78,11 @@ function doGet(e) {
                    pct: answered ? Math.round(counts[k] / answered * 100) : 0 };
         }).sort(function(a,b){ return b.count - a.count; }).slice(0, 6);
 
-        result.stats.push({ label:cfg.label, answered:answered, type:cfg.type, disclaimer:!!cfg.disclaimer, items:items });
+        // 只有兩個選項的單選題標記為 donut，前端用甜甜圈圖呈現
+        var isBinary = (cfg.type === 'single' && items.length === 2);
+        result.stats.push({ label:cfg.label, answered:answered, type:cfg.type,
+                            chart: isBinary ? 'donut' : 'bar',
+                            disclaimer:!!cfg.disclaimer, items:items });
       });
     }
     return json_(result);
