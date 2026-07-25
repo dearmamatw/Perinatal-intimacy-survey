@@ -298,6 +298,7 @@ function renderIntro(){
         · 任何一題都可以<b>跳過</b>，也可以隨時關掉離開，送出前的內容不會被留下。<br>
         · 資料僅作節目內容整理，若引用比例數字，會一併說明「為節目自行蒐集、非隨機抽樣、不代表全體」。<br>
         · 這不是醫療診斷，也不是研究收案。只是想收集你們的心聲。<br>
+        · 整體統計只會在<b>累積滿 30 份之後</b>才公開，而且只呈現整體比例，不會出現任何一個人的答案。<br>
         · 這份問卷裡說的「性生活」，指的是<b>任何你認為屬於性的親密接觸，不限性別、不限形式</b>，由你自己認定；異性、同性、跨性別的關係都在其中。<br>
         · 內容涉及成人親密關係，<b>需年滿 18 歲</b>才能參與。
       </div>
@@ -578,7 +579,12 @@ function sendSuccess(){
     <div id="statsArea" class="note" style="margin-top:20px">
       <p class="center" style="color:var(--faint)">正在看看有多少人和你一起走過這條走廊…</p>
     </div>
-    <p class="lead center" style="margin-top:22px">
+    <p class="lead center" style="margin-top:18px;font-size:14px">
+      🕯 走廊上，還亮著其他人的燈<br>
+      <a class="link" href="results/">看看大家怎麼說</a><br>
+      <span style="font-size:12.5px;color:var(--faint)">收藏這個連結，之後隨時可以回來看，不用重填</span>
+    </p>
+    <p class="lead center" style="margin-top:18px">
       🕯 想聽更多，來粉專找我們聊聊，追蹤
       <a class="link" href="https://www.facebook.com/dearmama.tw" target="_blank" rel="noopener">《媽媽，你睡了嗎？》粉絲專頁</a>
     </p>`;
@@ -719,9 +725,11 @@ function loadStats(targetId, withLit){
         });
         h += `<p style="margin-top:12px;font-size:12px;color:var(--faint)">＊本統計為節目自行蒐集、非隨機抽樣，不代表全體。</p></div>`;
       } else {
-        h += `<p style="margin-top:10px;font-size:13px;color:var(--faint)" class="center">等大家的心聲收集到 ${res.minN} 份，這裡就會出現大家的分布圖。<br>之後隨時可以回來看，不用重填。</p>`;
+        h += `<p style="margin-top:10px;font-size:13px;color:var(--faint)" class="center">大家的分布圖，會在收集滿 ${res.minN} 份之後亮起。<br>
+        人數太少的時候，比例容易失真，也可能讓少數人的答案被認出來——<br>
+        所以我們寧可多等一等，再把數字說出口。<br>
+        <span style="color:var(--gold-d)">你這一份，已經讓燈更亮了一點。🕯</span></p>`;
       }
-      h += `<p class="center" style="margin-top:14px;font-size:13px">📊 之後想回來看大家的分布 → 收藏 <a class="link" href="results/">這個結果頁</a></p>`;
       box.innerHTML = h;
       fillCompare(res);
     })
@@ -896,7 +904,7 @@ function statsFallback(withLit){
   if(withLit){
     h += `<p style="font-size:13.5px">你知道嗎？2009 年 BabyHome 一份針對台灣孕媽咪的調查（1006 份有效樣本）發現，<b>七成（70.4%）的孕媽咪在孕期仍有性生活</b>；而其中<b>高達八成六，進行時都曾擔心影響懷孕或胎兒</b>。你走過的，很多人也正在走。</p>`;
   }
-  h += `<p class="center" style="margin-top:10px;font-size:13px;color:var(--faint)">統計暫時讀取不到，之後可以到結果頁再看看。</p>`;
+  h += `<p class="center" style="margin-top:10px;font-size:12.5px;color:var(--faint)">目前人數統計暫時讀取不到，不影響你剛剛送出的內容。</p>`;
   return h;
 }
 function sendFail(){
